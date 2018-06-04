@@ -71,8 +71,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>D:\计算机图形学\code\CG_Final_Project_VS2015\CG_Final_Project_VS2015\Library\ft291\freetype-2.9.1\include;$(IncludePath)</IncludePath>
-    <LibraryPath>D:\计算机图形学\code\CG_Final_Project_VS2015\CG_Final_Project_VS2015\Library\ft291\freetype-2.9.1\objs\Win32;$(LibraryPath)</LibraryPath>
+    <IncludePath>.\resources\include;$(WindowsSDK_IncludePath);$(VC_IncludePath)</IncludePath>
+    <LibraryPath>.\resources\lib;$(NETFXKitsDir)Lib\um\x86;$(WindowsSDK_LibraryPath_x86);$(VC_LibraryPath_x86)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -91,11 +91,12 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>D:\计算机图形学\code\CG_Final_Project_VS2015\CG_Final_Project_VS2015\Library\ft291\freetype-2.9.1\objs\Win32\Debug\freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>freetype.lib;opengl32.lib;glfw3.lib;glew32s.lib;assimp-vc140-mt.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
