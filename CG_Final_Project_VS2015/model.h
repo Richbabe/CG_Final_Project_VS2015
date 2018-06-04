@@ -34,6 +34,11 @@ public:
 	string directory;
 	bool gammaCorrection;
 
+	//默认构造函数
+	Model() {
+
+	}
+
 	/*  Functions   */
 	// constructor, expects a filepath to a 3D model.
 	Model(string const &path, bool gamma = false) : gammaCorrection(gamma)

@@ -39,6 +39,12 @@
     <None Include="shader.vs">
       <Filter>资源文件</Filter>
     </None>
+    <None Include="text.fs">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="text.vs">
+      <Filter>资源文件</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="glad.c">
@@ -62,6 +68,12 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Sphere.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="AABB.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ptext.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

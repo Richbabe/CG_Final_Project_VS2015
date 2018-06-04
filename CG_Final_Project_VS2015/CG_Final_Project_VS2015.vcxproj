@@ -71,6 +71,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>D:\计算机图形学\code\CG_Final_Project_VS2015\CG_Final_Project_VS2015\Library\ft291\freetype-2.9.1\include;$(IncludePath)</IncludePath>
+    <LibraryPath>D:\计算机图形学\code\CG_Final_Project_VS2015\CG_Final_Project_VS2015\Library\ft291\freetype-2.9.1\objs\Win32;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -93,6 +95,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>D:\计算机图形学\code\CG_Final_Project_VS2015\CG_Final_Project_VS2015\Library\ft291\freetype-2.9.1\objs\Win32\Debug\freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -154,14 +157,18 @@
     <None Include="shader.vs" />
     <None Include="skybox.fs" />
     <None Include="skybox.vs" />
+    <None Include="text.fs" />
+    <None Include="text.vs" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="glad.c" />
     <ClCompile Include="源.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AABB.h" />
     <ClInclude Include="mesh.h" />
     <ClInclude Include="model.h" />
+    <ClInclude Include="ptext.h" />
     <ClInclude Include="Skybox.h" />
     <ClInclude Include="Sphere.h" />
     <ClInclude Include="stb_image.h" />
