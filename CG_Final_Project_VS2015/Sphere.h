@@ -49,7 +49,7 @@ private:
 		for (int i = 0; i <= divide; i++) {
 			altitude = (float)(pi / 2.0 - i * pi / divide);//获取当前等份的纬度值
 			altitudeDelta = (float)(pi / 2.0 - (i + 1) * pi / divide);//获取下一等份的纬度值
-																	  //将经度等分成divide份，这样就能得到当前纬度值和下一纬度值的每一份经度值
+			//将经度等分成divide份，这样就能得到当前纬度值和下一纬度值的每一份经度值
 			for (int j = 0; j <= divide; j++) {
 				azimuth = (float)(j * (pi * 2) / divide);//计算经度值
 				ex = (float)(cos(altitude) * cos(azimuth));
@@ -80,11 +80,11 @@ private:
 		glGenVertexArrays(1, &sphereVAO);//生成一个VAO对象
 		glGenBuffers(1, &sphereVBO);//生成一个VBO对象
 		glBindVertexArray(sphereVAO);//绑定VAO
-									//把顶点数组复制到缓冲中供OpengGL使用
+		//把顶点数组复制到缓冲中供OpengGL使用
 		glBindBuffer(GL_ARRAY_BUFFER, sphereVBO);//把新创建的缓冲VBO绑定到GL_ARRAY_BUFFER目标上
 		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertices.size(), &vertices[0], GL_STATIC_DRAW);//把之前定义的顶点数据points_vertices复制到缓冲的内存中
-																									 //链接顶点属性
-																									 //位置属性，值为0
+		//链接顶点属性
+		//位置属性，值为0
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);//解析顶点数据
 		glEnableVertexAttribArray(0);
 		//纹理属性，值为1
@@ -94,8 +94,8 @@ private:
 		//*******纹理1*******
 		glGenTextures(1, &sphereTexture);//第一个参数表示输入生成纹理的数量
 		glBindTexture(GL_TEXTURE_2D, sphereTexture);//绑定纹理
-											  //为当前绑定的纹理对象设置环绕、过滤方式
-											  //设置环绕方式
+		//为当前绑定的纹理对象设置环绕、过滤方式
+		//设置环绕方式
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);    // set texture wrapping to GL_REPEAT (default wrapping method)
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 		//设置过滤方式

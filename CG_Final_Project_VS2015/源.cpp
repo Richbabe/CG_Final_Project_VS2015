@@ -10,6 +10,7 @@
 #include "Skybox.h"
 #include "model.h"
 #include "Sphere.h"
+#include "AABB.h"
 
 #include <iostream>
 #include <vector>
@@ -34,6 +35,8 @@ bool firstMouse = true;
 // timing
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
+
+bool ShowAABB = 0;
 
 int main()
 {
@@ -83,8 +86,17 @@ int main()
 	Shader normalShader("shader.vs", "shader.fs");
 	Shader skyboxShader("skybox.vs", "skybox.fs");
 	Shader modelShader("model.vs", "model.fs");
+	Shader AABBShader("AABBshader.vs", "AABBshader.fs");
 
 	Model shipModel(std::string("resources/objects/F15C/F-15C_Eagle.dae"));
+
+	AABB shipAABB(shipModel);//·É´¬AABBÅö×²Ä£ÐÍ
+
+	cout << "ship:" << endl;
+	cout << "xMin:" << shipAABB.xMin << " xMax:" << shipAABB.xMax << endl;
+	cout << "yMin:" << shipAABB.yMin << " yMax:" << shipAABB.yMax << endl;
+	cout << "zMin:" << shipAABB.zMin << " zMax:" << shipAABB.zMax << endl;
+	cout << "*****************" << endl;
 
 	// Sphere
 	// ------
@@ -108,6 +120,11 @@ int main()
 
 	for (int i = 0; i < 11; i++)
 		spheres[i] = Sphere(divide, raidus[i], textureMap[i]);
+
+	AABB spheresAABB[11];//ÐÇÇòÅö×²ºÐ
+	for (int i = 0; i < 11; i++) {
+		spheresAABB[i] = AABB(spheres[i]);
+	}
 	
 	// load textures
 	// -------------
@@ -130,10 +147,13 @@ int main()
 	skyboxShader.use();
 	skyboxShader.setInt("skybox", 0);
 
+	int count = 0;
+
 	// render loop
 	// -----------
 	while (!glfwWindowShouldClose(window))
 	{
+		count++;
 		// per-frame time logic
 		// --------------------
 		float currentFrame = glfwGetTime();
@@ -157,6 +177,8 @@ int main()
 		glm::mat4 sun_trans(1);//±ä»»¾ØÕó
 		spheres[0].Draw(normalShader, sun_trans, view, projection);
 
+		spheresAABB[0].drawAABB(AABBShader, sun_trans, view, projection, ShowAABB);//»æÖÆÌ«ÑôAABBÅö×²ºÐ
+
 		// draw mercury
 		glm::mat4 mercury_trans(1);//±ä»»¾ØÕó
 		mercury_trans = glm::rotate(mercury_trans, (float)glfwGetTime() * 10 * glm::radians(20.0f), glm::vec3(0.0f, 1.0f, 0.0f));
@@ -164,12 +186,16 @@ int main()
 		mercury_trans = glm::rotate(mercury_trans, (float)glfwGetTime() * 10 * glm::radians(50.0f), glm::vec3(0.0f, 1.0f, 1.0f));
 		spheres[1].Draw(normalShader, mercury_trans, view, projection);
 
+		spheresAABB[1].drawAABB(AABBShader, mercury_trans, view, projection, ShowAABB);
+
 		// draw venus
 		glm::mat4 venus_trans(1);//±ä»»¾ØÕó
 		venus_trans = glm::rotate(venus_trans, (float)glfwGetTime() * glm::radians(30.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		venus_trans = glm::translate(venus_trans, glm::vec3(2.5, 0.0, 0.0));
 		venus_trans = glm::rotate(venus_trans, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.0f, 1.0f, 1.0f));
 		spheres[2].Draw(normalShader, venus_trans, view, projection);
+
+		spheresAABB[2].drawAABB(AABBShader, venus_trans, view, projection, ShowAABB);
 
 		// draw earth
 		static glm::vec4 earth_position(0.0, 0.0, 0.0, 1.0);
@@ -179,6 +205,8 @@ int main()
 		earth_position = earth_trans * earth_position;
 		earth_trans = glm::rotate(earth_trans, (float)glfwGetTime() * glm::radians(100.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		spheres[3].Draw(normalShader, earth_trans, view, projection);
+
+		spheresAABB[3].drawAABB(AABBShader, earth_trans, view, projection, ShowAABB);
 
 		// draw moon
 		int earth_moon_radium = 0.2;
@@ -192,12 +220,16 @@ int main()
 		//moon_trans = glm::rotate(moon_trans, (float)glfwGetTime() * 10 * glm::radians(150.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		spheres[4].Draw(normalShader, moon_trans, view, projection);
 
+		spheresAABB[4].drawAABB(AABBShader, moon_trans, view, projection, ShowAABB);
+
 		// draw mars
 		glm::mat4 mars_trans(1);//±ä»»¾ØÕó
 		mars_trans = glm::rotate(mars_trans, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		mars_trans = glm::translate(mars_trans, glm::vec3(5.0, 0.0, 0.0));
 		mars_trans = glm::rotate(mars_trans, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.0f, 1.0f, 1.0f));
 		spheres[5].Draw(normalShader, mars_trans, view, projection);
+
+		spheresAABB[5].drawAABB(AABBShader, mars_trans, view, projection, ShowAABB);
 
 		// draw jupiter
 		glm::mat4 jupiter_trans(1);//±ä»»¾ØÕó
@@ -206,12 +238,16 @@ int main()
 		jupiter_trans = glm::rotate(jupiter_trans, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.0f, 1.0f, 1.0f));
 		spheres[6].Draw(normalShader, jupiter_trans, view, projection);
 
+		spheresAABB[6].drawAABB(AABBShader, jupiter_trans, view, projection, ShowAABB);
+
 		// draw saturn
 		glm::mat4 saturn_trans(1);//±ä»»¾ØÕó
 		saturn_trans = glm::rotate(saturn_trans, (float)glfwGetTime() * glm::radians(80.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		saturn_trans = glm::translate(saturn_trans, glm::vec3(7.6, 0.0, 0.0));
 		saturn_trans = glm::rotate(saturn_trans, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.0f, 1.0f, 1.0f));
 		spheres[7].Draw(normalShader, saturn_trans, view, projection);
+
+		spheresAABB[7].drawAABB(AABBShader, saturn_trans, view, projection, ShowAABB);
 
 		// draw uranus
 		glm::mat4 uranus_trans(1);//±ä»»¾ØÕó
@@ -220,12 +256,16 @@ int main()
 		uranus_trans = glm::rotate(uranus_trans, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.0f, 1.0f, 1.0f));
 		spheres[8].Draw(normalShader, uranus_trans, view, projection);
 
+		spheresAABB[8].drawAABB(AABBShader, uranus_trans, view, projection, ShowAABB);
+
 		// draw neptune
 		glm::mat4 neptune_trans(1);//±ä»»¾ØÕó
 		neptune_trans = glm::rotate(neptune_trans, (float)glfwGetTime() * glm::radians(120.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		neptune_trans = glm::translate(neptune_trans, glm::vec3(10.5, 0.0, 0.0));
 		neptune_trans = glm::rotate(neptune_trans, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.0f, 1.0f, 1.0f));
 		spheres[9].Draw(normalShader, neptune_trans, view, projection);
+
+		spheresAABB[9].drawAABB(AABBShader, neptune_trans, view, projection, ShowAABB);
 
 		// draw pluto
 		glm::mat4 pluto_trans(1);//±ä»»¾ØÕó
@@ -234,6 +274,7 @@ int main()
 		pluto_trans = glm::rotate(pluto_trans, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.0f, 1.0f, 1.0f));
 		spheres[10].Draw(normalShader, pluto_trans, view, projection);
 
+		spheresAABB[10].drawAABB(AABBShader, pluto_trans, view, projection, ShowAABB);
 
 		// draw scene as normal
 		modelShader.use();
@@ -242,10 +283,42 @@ int main()
 
 		// render the loaded model
 		glm::mat4 model;
-		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 7.0f)); // translate it down so it's at the center of the scene
 		model = glm::scale(model, glm::vec3(0.0004f, 0.0004f, 0.0004f));    // it's a bit too big for our scene, so scale it down
+		//model = glm::translate(model, glm::vec3(0.0f, 0.0f, -20.0f));
+		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 5.0f * count)); // translate it down so it's at the center of the scene
+
+		glm::vec4 test = model * glm::vec4(0, 0, 0, 1);
+		/*
+		for (int i = 0; i < 4; i++) {
+			for (int j = 0; j < 4; j++)
+				cout << model[j][i] << ' ';
+			cout << endl;
+		}
+
+		for (int i = 0; i < 4; i++)
+			cout << test[i] << ' ';
+		cout << endl;
+		*/
 		modelShader.setMat4("model", model);
 		shipModel.Draw(modelShader);
+
+		//»æÖÆ·É´¬AABBÄ£ÐÍ
+		AABBShader.use();
+		shipAABB.drawAABB(AABBShader, model, view, projection, ShowAABB);
+		/*
+		cout << "ship:" << endl;
+		cout << "xMin:" << shipAABB.xMin << " xMax:" << shipAABB.xMax << endl;
+		cout << "yMin:" << shipAABB.yMin << " yMax:" << shipAABB.yMax << endl;
+		cout << "zMin:" << shipAABB.zMin << " zMax:" << shipAABB.zMax << endl;
+		cout << "-----------------" << endl;
+		*/
+
+		//¼ì²â·É´¬ÊÇ·ñÓëÐÇÇòÅö×²
+		for (int i = 0; i < 11; i++) {
+			if (shipAABB.IsIntersection(spheresAABB[i])) {
+				cout << "crash ball " << i << " game over!!!" << endl;
+			}
+		}
 
 		skybox.Draw(skyboxShader, view, projection);
 		// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
@@ -276,6 +349,9 @@ void processInput(GLFWwindow *window)
 		camera.ProcessKeyboard(LEFT, deltaTime);
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 		camera.ProcessKeyboard(RIGHT, deltaTime);
+	//°´ÏÂMÏÔÊ¾/Òþ²ØÅö×²ºÐ
+	if (glfwGetKey(window, GLFW_KEY_M) == GLFW_PRESS)
+		ShowAABB = 1 - ShowAABB;
 }
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
