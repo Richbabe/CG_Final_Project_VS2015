@@ -28,6 +28,14 @@ public:
 	}
 
 	void Draw(Shader shader, const glm::mat4& transform, const glm::mat4& view, const glm::mat4& projection) {
+		//更新圆心坐标位置
+		glm::vec4 temp = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
+		glm::vec4 result = transform * temp;
+		vertices[0] = result.x;
+		vertices[1] = result.y;
+		vertices[2] = result.z;
+		//cout << vertices[0] << " " << vertices[1] << " " << vertices[2] << endl;
+
 		glBindTexture(GL_TEXTURE_2D, sphereTexture);
 		shader.use();
 		shader.setMat4("projection", projection);
