@@ -34,7 +34,7 @@ public:
 		shader.setMat4("view", view);
 		shader.setMat4("transform", transform);
 		glBindVertexArray(sphereVAO);//绑定VAO
-		glDrawArrays(GL_TRIANGLE_STRIP, 0, vertices.size() / 8);//绘制图元
+		glDrawArrays(GL_TRIANGLE_STRIP, 0, (vertices.size() - 3) / 8);//绘制图元
 	}
 private:
 	/* Functions */
@@ -45,6 +45,12 @@ private:
 		float ex;//点的x坐标
 		float ey;//点的y坐标
 		float ez;//点的z坐标
+
+		//将圆心压入顶点数组
+		for (int i = 0; i < 3; i++) {
+			vertices.push_back(0.0f);
+		}
+		
 		//将维度等分成divide份，这样就能计算出每一等份的纬度值
 		for (int i = 0; i <= divide; i++) {
 			altitude = (float)(pi / 2.0 - i * pi / divide);//获取当前等份的纬度值
@@ -63,9 +69,9 @@ private:
 				vertices.push_back(j / (float)divide);
 				vertices.push_back(i / (float)divide);
 				//计算azimuth经度下纬度为altitude的点对应法向量
-				vertices.push_back(radius * ex - 0);
-				vertices.push_back(radius * ey - 0);
-				vertices.push_back(radius * ez - 0);
+				vertices.push_back(radius * ex - vertices[0]);
+				vertices.push_back(radius * ey - vertices[1]);
+				vertices.push_back(radius * ez - vertices[2]);
 
 				ex = (float)(cos(altitudeDelta) * cos(azimuth));
 				ey = (float)sin(altitudeDelta);
@@ -78,9 +84,9 @@ private:
 				vertices.push_back(j / (float)divide);
 				vertices.push_back((i + 1) / (float)divide);
 				//计算azimuth经度下纬度为altitudeDelta的点对应法向量
-				vertices.push_back(radius * ex - 0);
-				vertices.push_back(radius * ey - 0);
-				vertices.push_back(radius * ez - 0);
+				vertices.push_back(radius * ex - vertices[0]);
+				vertices.push_back(radius * ey - vertices[1]);
+				vertices.push_back(radius * ez - vertices[2]);
 			}
 		}
 		//球体
@@ -93,13 +99,13 @@ private:
 		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertices.size(), &vertices[0], GL_STATIC_DRAW);//把之前定义的顶点数据points_vertices复制到缓冲的内存中
 		//链接顶点属性
 		//位置属性，值为0
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);//解析顶点数据
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));//解析顶点数据
 		glEnableVertexAttribArray(0);
 		//纹理属性，值为1
-		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));//解析顶点数据
+		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));//解析顶点数据
 		glEnableVertexAttribArray(1);
 		//法向量属性，值为2
-		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(5 * sizeof(float)));//解析顶点数据
+		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(8 * sizeof(float)));//解析顶点数据
 		glEnableVertexAttribArray(2);
 
 		//*******纹理1*******
