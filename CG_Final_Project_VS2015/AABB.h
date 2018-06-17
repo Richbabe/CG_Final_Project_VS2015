@@ -168,7 +168,7 @@ public:
 		zMin = 999999.0f;
 		zMax = -999999.0f;
 		vector<float> vertice = ball.vertices;
-		for (int i = 0; i < vertice.size(); i += 5) {
+		for (int i = 0; i < vertice.size(); i += 8) {
 			//更新x的最小值
 			xMin = min(xMin, vertice[i]);
 			//更新y的最小值

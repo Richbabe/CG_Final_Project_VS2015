@@ -289,6 +289,7 @@ int main()
 		model = glm::scale(model, glm::vec3(0.0004f, 0.0004f, 0.0004f));    // it's a bit too big for our scene, so scale it down
 		//model = glm::translate(model, glm::vec3(0.0f, 0.0f, -20.0f));
 		model = glm::translate(model, glm::vec3(0.0f, 0.0f, -2.0f * count)); // translate it down so it's at the center of the scene
+		//model = camera.GetViewMatrix();
 
 		glm::vec4 test = model * glm::vec4(0, 0, 0, 1);
 		/*
