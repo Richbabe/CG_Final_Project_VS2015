@@ -55,7 +55,7 @@ public:
 	}
 
 	//构建AABB盒8个顶点
-	void InitializeAABBvertices(){
+	void InitializeAABBvertices() {
 		//第一个顶点
 		AABB_vertices[0].x = xMin;
 		AABB_vertices[0].y = yMax;
@@ -168,7 +168,7 @@ public:
 		zMin = 999999.0f;
 		zMax = -999999.0f;
 		vector<float> vertice = ball.vertices;
-		for (int i = 3; i < vertice.size(); i += 8) {
+		for (int i = 0; i < vertice.size(); i += 8) {
 			//更新x的最小值
 			xMin = min(xMin, vertice[i]);
 			//更新y的最小值
@@ -242,11 +242,11 @@ public:
 		glGenVertexArrays(1, &AABB_VAO);//生成一个VAO对象
 		glGenBuffers(1, &AABB_VBO);//生成一个VBO对象
 		glBindVertexArray(AABB_VAO);//绑定VAO
-		//把顶点数组复制到缓冲中供OpengGL使用
+									//把顶点数组复制到缓冲中供OpengGL使用
 		glBindBuffer(GL_ARRAY_BUFFER, AABB_VBO);//把新创建的缓冲VBO绑定到GL_ARRAY_BUFFER目标上
 		glBufferData(GL_ARRAY_BUFFER, sizeof(AABB_vertices), AABB_vertices, GL_STATIC_DRAW);//把之前定义的顶点数据vertices复制到缓冲的内存中
-		//链接顶点属性
-		//位置属性，值为0
+																							//链接顶点属性
+																							//位置属性，值为0
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);//解析顶点数据
 		glEnableVertexAttribArray(0);
 		//颜色属性，值为1
@@ -260,41 +260,41 @@ public:
 		/*
 		//如果a包围盒最小的x坐标大于b包围盒的最大x坐标，a包围盒在x方向上在b的右边
 		if (a.xMin > xMax) {
-			return FALSE;
+		return FALSE;
 		}
 		//如果a包围盒最大的x坐标小于b包围盒的最小x坐标，a包围盒在x方向上在b的左边
 		else if (a.xMax < xMin) {
-			return FALSE;
+		return FALSE;
 		}
 		//如果a包围盒最小的Y坐标大于b包围盒的最大Y坐标，a包围盒在Y方向上在b的右边
-		else if (a.yMin > yMax)  
+		else if (a.yMin > yMax)
 		{
-			return FALSE;
+		return FALSE;
 		}
-		//如果a包围盒最大的Y坐标小于b包围盒的最小的Y坐标,a包围盒在Y方向上在b的左边 
-		else if (a.yMax < yMin) 
+		//如果a包围盒最大的Y坐标小于b包围盒的最小的Y坐标,a包围盒在Y方向上在b的左边
+		else if (a.yMax < yMin)
 		{
-			return FALSE;
+		return FALSE;
 		}
 		//如果a包围盒最小的Z坐标大于b包围盒的最大Z坐标，a包围盒在Z方向上在b的上方
-		else if (a.zMin > zMax)  
+		else if (a.zMin > zMax)
 		{
-			return FALSE;
+		return FALSE;
 		}
 		//如果a包围盒最大的Z坐标小于b包围盒的最小的Z坐标,a包围盒在Z方向上在b的下方
-		else if (a.zMax < zMin)  
+		else if (a.zMax < zMin)
 		{
-			return FALSE;
+		return FALSE;
 		}
 		else
 		{
-			return TRUE;
+		return TRUE;
 		}
 		*/
 
 		return ((xMin >= a.xMin && xMin <= a.xMax) || (a.xMin >= xMin && a.xMin <= xMax)) &&
-			   ((yMin >= a.yMin && yMin <= a.yMax) || (a.yMin >= yMin && a.yMin <= yMax)) &&
-			   ((zMin >= a.zMin && zMin <= a.zMax) || (a.zMin >= zMin && a.zMin <= zMax));
+			((yMin >= a.yMin && yMin <= a.yMax) || (a.yMin >= yMin && a.yMin <= yMax)) &&
+			((zMin >= a.zMin && zMin <= a.zMax) || (a.zMin >= zMin && a.zMin <= zMax));
 	}
 
 	//实时更新AABB碰撞盒的顶点
@@ -304,34 +304,34 @@ public:
 		/*
 		cout << "transform----------------" << endl;
 		for (int i = 0; i < 4; i++) {
-			for (int j = 0; j < 4; j++)
-				cout << transform[j][i] << ' ';
-			cout << endl;
+		for (int j = 0; j < 4; j++)
+		cout << transform[j][i] << ' ';
+		cout << endl;
 		}
 		*/
 		//更新8个顶点和xMin,yMin,zMin,xMax,yMax,zMax;
 		for (int i = 0; i < 8; i++) {
 			glm::vec4 temp = glm::vec4(aabb_vertices[i].x, aabb_vertices[i].y, aabb_vertices[i].z, 1.0f);
 			glm::vec4 result = transform * temp;
-			
+
 			AABB_vertices[i].x = result.x;
 			//xMin = min(result.x, xMin);
 			//xMax = max(result.x, xMax);
-			
+
 			AABB_vertices[i].y = result.y;
 			//yMin = min(result.y, yMin);
 			//yMax = max(result.y, yMax);
-			
+
 			AABB_vertices[i].z = result.z;
 			//zMin = min(result.z, zMin);
 			//zMax = max(result.z, zMax);
 		}
 
-		glm::vec4 test = transform * glm::vec4(0.0f,0.0f,0.0f,1.0f);
+		glm::vec4 test = transform * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
 		/*
 		cout << "result----------------" << endl;
 		for (int i = 0; i < 4; i++)
-			cout << test[i] << ' ';
+		cout << test[i] << ' ';
 		cout << endl;
 		*/
 		//更新xMin,yMin,zMin,xMax,yMax,zMax
@@ -352,7 +352,7 @@ public:
 	}
 
 	//绘制AABB碰撞盒
-	void drawAABB(Shader shader, const glm::mat4& transform, const glm::mat4& view, const glm::mat4& projection,bool& ShowAABB) {
+	void drawAABB(Shader shader, const glm::mat4& transform, const glm::mat4& view, const glm::mat4& projection, bool& ShowAABB) {
 		//更新AABB碰撞盒的顶点
 		upDateAABBvertices(transform);
 

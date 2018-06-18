@@ -45,6 +45,15 @@
     <None Include="text.vs">
       <Filter>资源文件</Filter>
     </None>
+    <None Include="depth.gs">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="depth.fs">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="depth.vs">
+      <Filter>资源文件</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="glad.c">

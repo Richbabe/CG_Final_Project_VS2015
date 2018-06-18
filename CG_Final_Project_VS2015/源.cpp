@@ -32,6 +32,9 @@ Camera camera(glm::vec3(0.0f, 0.0f, 8.0f));
 float lastX = (float)SCR_WIDTH / 2.0;
 float lastY = (float)SCR_HEIGHT / 2.0;
 bool firstMouse = true;
+bool shadows = true;
+bool shadowsKeyPressed = false;
+
 
 // timing
 float deltaTime = 0.0f;
@@ -80,6 +83,7 @@ int main()
 	// configure global opengl state
 	// -----------------------------
 	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_CULL_FACE);
 
 	// build and compile shaders
 	// -------------------------
@@ -88,18 +92,19 @@ int main()
 	Shader skyboxShader("skybox.vs", "skybox.fs");
 	Shader modelShader("model.vs", "model.fs");
 	Shader AABBShader("AABBshader.vs", "AABBshader.fs");
+	Shader simpleDepthShader("depth.vs", "depth.fs", "depth.gs");
 
-	test_vao(SCR_WIDTH, SCR_HEIGHT);
+	test_vao(SCR_WIDTH, SCR_HEIGHT);//text
 
-	Model shipModel(std::string("resources/objects/F15C/F-15C_Eagle.dae"));
+	Model shipModel(std::string("resources/objects/F15C/F-15C_Eagle.dae"));// loading the model
 
 	AABB shipAABB(shipModel);//∑…¥¨AABB≈ˆ◊≤ƒ£–Õ
 
-	cout << "ship:" << endl;
+	/*cout << "ship:" << endl;
 	cout << "xMin:" << shipAABB.xMin << " xMax:" << shipAABB.xMax << endl;
 	cout << "yMin:" << shipAABB.yMin << " yMax:" << shipAABB.yMax << endl;
 	cout << "zMin:" << shipAABB.zMin << " zMax:" << shipAABB.zMax << endl;
-	cout << "*****************" << endl;
+	cout << "*****************" << endl;*/
 
 	// Sphere
 	// ------
@@ -142,16 +147,42 @@ int main()
 	};
 	Skybox skybox(faces);
 
+	const unsigned int SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024;
+	unsigned int depthMapFBO;
+	glGenFramebuffers(1, &depthMapFBO);
+	// create depth cubemap texture
+	unsigned int depthCubemap;
+	glGenTextures(1, &depthCubemap);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, depthCubemap);
+	for (unsigned int i = 0; i < 6; ++i)
+		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_DEPTH_COMPONENT, SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+	// attach depth texture as FBO's depth buffer
+	glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+	glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, depthCubemap, 0);
+	glDrawBuffer(GL_NONE);
+	glReadBuffer(GL_NONE);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
 	// shader configuration
 	// --------------------
 	shader.use();
 	shader.setInt("skybox", 0);
+
+	normalShader.use();
+	normalShader.setInt("diffuseTexture", 0);
+	normalShader.setInt("depthMap", 1);
 
 	skyboxShader.use();
 	skyboxShader.setInt("skybox", 0);
 
 	int count = 0;
 
+	glm::vec3 lightPos(0.0f, 0.0f, 0.0f);
 	// render loop
 	// -----------
 	while (!glfwWindowShouldClose(window))
@@ -172,33 +203,41 @@ int main()
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+		float near_plane = 1.0f;
+		float far_plane = 25.0f;
+		glm::mat4 shadowProj = glm::perspective(glm::radians(90.0f), (float)SHADOW_WIDTH / (float)SHADOW_HEIGHT, near_plane, far_plane);
+		std::vector<glm::mat4> shadowTransforms;
+		shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
+		shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
+		shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f)));
+		shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f)));
+		shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
+		shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
+
+
+
 		// view/projection transformations
 		glm::mat4 projection = glm::perspective(45.0f, (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 1000.0f);
 		glm::mat4 view = camera.GetViewMatrix();
 
+		//renderScene(normalShader, AABBShader,modelShader, spheres, spheresAABB, shipAABB, shipModel, count);
+
+
 		// draw sun
 		glm::mat4 sun_trans(1);//±‰ªªæÿ’Û
-		spheres[0].Draw(normalShader, sun_trans, view, projection);
-
-		spheresAABB[0].drawAABB(AABBShader, sun_trans, view, projection, ShowAABB);//ªÊ÷∆Ã´—ÙAABB≈ˆ◊≤∫–
 
 		// draw mercury
 		glm::mat4 mercury_trans(1);//±‰ªªæÿ’Û
 		mercury_trans = glm::rotate(mercury_trans, (float)glfwGetTime() * 10 * glm::radians(20.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		mercury_trans = glm::translate(mercury_trans, glm::vec3(1.5, 0.0, 0.0));
 		mercury_trans = glm::rotate(mercury_trans, (float)glfwGetTime() * 10 * glm::radians(50.0f), glm::vec3(0.0f, 1.0f, 1.0f));
-		spheres[1].Draw(normalShader, mercury_trans, view, projection);
-
-		spheresAABB[1].drawAABB(AABBShader, mercury_trans, view, projection, ShowAABB);
 
 		// draw venus
 		glm::mat4 venus_trans(1);//±‰ªªæÿ’Û
 		venus_trans = glm::rotate(venus_trans, (float)glfwGetTime() * glm::radians(30.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		venus_trans = glm::translate(venus_trans, glm::vec3(2.5, 0.0, 0.0));
 		venus_trans = glm::rotate(venus_trans, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.0f, 1.0f, 1.0f));
-		spheres[2].Draw(normalShader, venus_trans, view, projection);
-
-		spheresAABB[2].drawAABB(AABBShader, venus_trans, view, projection, ShowAABB);
+		
 
 		// draw earth
 		static glm::vec4 earth_position(0.0, 0.0, 0.0, 1.0);
@@ -207,9 +246,6 @@ int main()
 		earth_trans = glm::translate(earth_trans, glm::vec3(3.5, 0.0, 0.0));
 		earth_position = earth_trans * earth_position;
 		earth_trans = glm::rotate(earth_trans, (float)glfwGetTime() * glm::radians(100.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-		spheres[3].Draw(normalShader, earth_trans, view, projection);
-
-		spheresAABB[3].drawAABB(AABBShader, earth_trans, view, projection, ShowAABB);
 
 		// draw moon
 		int earth_moon_radium = 0.2;
@@ -221,90 +257,117 @@ int main()
 		//moon_trans =
 		//moon_trans = glm::translate(moon_trans, glm::vec3(dx + earth_position.x, 0, dz + earth_position.z));
 		//moon_trans = glm::rotate(moon_trans, (float)glfwGetTime() * 10 * glm::radians(150.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-		spheres[4].Draw(normalShader, moon_trans, view, projection);
-
-		spheresAABB[4].drawAABB(AABBShader, moon_trans, view, projection, ShowAABB);
+		
 
 		// draw mars
 		glm::mat4 mars_trans(1);//±‰ªªæÿ’Û
 		mars_trans = glm::rotate(mars_trans, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		mars_trans = glm::translate(mars_trans, glm::vec3(5.0, 0.0, 0.0));
 		mars_trans = glm::rotate(mars_trans, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.0f, 1.0f, 1.0f));
-		spheres[5].Draw(normalShader, mars_trans, view, projection);
-
-		spheresAABB[5].drawAABB(AABBShader, mars_trans, view, projection, ShowAABB);
+		
 
 		// draw jupiter
 		glm::mat4 jupiter_trans(1);//±‰ªªæÿ’Û
 		jupiter_trans = glm::rotate(jupiter_trans, (float)glfwGetTime() * glm::radians(70.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		jupiter_trans = glm::translate(jupiter_trans, glm::vec3(6.2, 0.0, 0.0));
 		jupiter_trans = glm::rotate(jupiter_trans, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.0f, 1.0f, 1.0f));
-		spheres[6].Draw(normalShader, jupiter_trans, view, projection);
-
-		spheresAABB[6].drawAABB(AABBShader, jupiter_trans, view, projection, ShowAABB);
+		
 
 		// draw saturn
 		glm::mat4 saturn_trans(1);//±‰ªªæÿ’Û
 		saturn_trans = glm::rotate(saturn_trans, (float)glfwGetTime() * glm::radians(80.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		saturn_trans = glm::translate(saturn_trans, glm::vec3(7.6, 0.0, 0.0));
 		saturn_trans = glm::rotate(saturn_trans, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.0f, 1.0f, 1.0f));
-		spheres[7].Draw(normalShader, saturn_trans, view, projection);
-
-		spheresAABB[7].drawAABB(AABBShader, saturn_trans, view, projection, ShowAABB);
 
 		// draw uranus
 		glm::mat4 uranus_trans(1);//±‰ªªæÿ’Û
 		uranus_trans = glm::rotate(uranus_trans, (float)glfwGetTime() * glm::radians(100.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		uranus_trans = glm::translate(uranus_trans, glm::vec3(8.9, 0.0, 0.0));
 		uranus_trans = glm::rotate(uranus_trans, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.0f, 1.0f, 1.0f));
-		spheres[8].Draw(normalShader, uranus_trans, view, projection);
-
-		spheresAABB[8].drawAABB(AABBShader, uranus_trans, view, projection, ShowAABB);
 
 		// draw neptune
 		glm::mat4 neptune_trans(1);//±‰ªªæÿ’Û
 		neptune_trans = glm::rotate(neptune_trans, (float)glfwGetTime() * glm::radians(120.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		neptune_trans = glm::translate(neptune_trans, glm::vec3(10.5, 0.0, 0.0));
 		neptune_trans = glm::rotate(neptune_trans, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.0f, 1.0f, 1.0f));
-		spheres[9].Draw(normalShader, neptune_trans, view, projection);
-
-		spheresAABB[9].drawAABB(AABBShader, neptune_trans, view, projection, ShowAABB);
+		
 
 		// draw pluto
 		glm::mat4 pluto_trans(1);//±‰ªªæÿ’Û
 		pluto_trans = glm::rotate(pluto_trans, (float)glfwGetTime() * glm::radians(130.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		pluto_trans = glm::translate(pluto_trans, glm::vec3(12, 0.0, 0.0));
 		pluto_trans = glm::rotate(pluto_trans, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.0f, 1.0f, 1.0f));
-		spheres[10].Draw(normalShader, pluto_trans, view, projection);
 
+		glm::mat4 model = glm::mat4();
+		model = glm::scale(model, glm::vec3(1.0f));
+
+		glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+		glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+		glClear(GL_DEPTH_BUFFER_BIT);
+		simpleDepthShader.use();
+		simpleDepthShader.setMat4("model", model);
+		for (unsigned int i = 0; i < 6; ++i)
+			simpleDepthShader.setMat4("shadowMatrices[" + std::to_string(i) + "]", shadowTransforms[i]);
+		simpleDepthShader.setFloat("far_plane", far_plane);
+		simpleDepthShader.setVec3("lightPos", lightPos);
+		spheres[0].Draw(simpleDepthShader, sun_trans, view, projection);
+		spheres[1].Draw(simpleDepthShader, mercury_trans, view, projection);
+		spheres[2].Draw(simpleDepthShader, venus_trans, view, projection);
+		spheres[3].Draw(simpleDepthShader, earth_trans, view, projection);
+		spheres[4].Draw(simpleDepthShader, moon_trans, view, projection);
+		spheres[5].Draw(simpleDepthShader, mars_trans, view, projection);
+		spheres[6].Draw(simpleDepthShader, jupiter_trans, view, projection);
+		spheres[7].Draw(simpleDepthShader, saturn_trans, view, projection);
+		spheres[8].Draw(simpleDepthShader, uranus_trans, view, projection);
+		spheres[9].Draw(simpleDepthShader, neptune_trans, view, projection);
+		spheres[10].Draw(simpleDepthShader, pluto_trans, view, projection);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+		glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		normalShader.use();
+		normalShader.setMat4("model", model);
+		normalShader.setInt("reverse_normals", false);
+		// set lighting uniforms
+		normalShader.setVec3("lightPos", lightPos);
+		normalShader.setVec3("viewPos", camera.Position);
+		normalShader.setInt("shadows", shadows); // enable/disable shadows by pressing 'SPACE'
+		normalShader.setFloat("far_plane", far_plane);
+		spheres[0].Draw(normalShader, sun_trans, view, projection, depthCubemap);
+		spheres[1].Draw(normalShader, mercury_trans, view, projection, depthCubemap);
+		spheres[2].Draw(normalShader, venus_trans, view, projection, depthCubemap);
+		spheres[3].Draw(normalShader, earth_trans, view, projection, depthCubemap);
+		spheres[4].Draw(normalShader, moon_trans, view, projection, depthCubemap);
+		spheres[5].Draw(normalShader, mars_trans, view, projection, depthCubemap);
+		spheres[6].Draw(normalShader, jupiter_trans, view, projection, depthCubemap);
+		spheres[7].Draw(normalShader, saturn_trans, view, projection, depthCubemap);
+		spheres[8].Draw(normalShader, uranus_trans, view, projection, depthCubemap);
+		spheres[9].Draw(normalShader, neptune_trans, view, projection, depthCubemap);
+		spheres[10].Draw(normalShader, pluto_trans, view, projection, depthCubemap);
+		
+		spheresAABB[0].drawAABB(AABBShader, sun_trans, view, projection, ShowAABB);//ªÊ÷∆Ã´—ÙAABB≈ˆ◊≤∫–
+		spheresAABB[1].drawAABB(AABBShader, mercury_trans, view, projection, ShowAABB);
+		spheresAABB[2].drawAABB(AABBShader, venus_trans, view, projection, ShowAABB);
+		spheresAABB[3].drawAABB(AABBShader, earth_trans, view, projection, ShowAABB);
+		spheresAABB[4].drawAABB(AABBShader, moon_trans, view, projection, ShowAABB);
+		spheresAABB[5].drawAABB(AABBShader, mars_trans, view, projection, ShowAABB);
+		spheresAABB[6].drawAABB(AABBShader, jupiter_trans, view, projection, ShowAABB);
+		spheresAABB[7].drawAABB(AABBShader, saturn_trans, view, projection, ShowAABB);
+		spheresAABB[8].drawAABB(AABBShader, uranus_trans, view, projection, ShowAABB);
+		spheresAABB[9].drawAABB(AABBShader, neptune_trans, view, projection, ShowAABB);
 		spheresAABB[10].drawAABB(AABBShader, pluto_trans, view, projection, ShowAABB);
 
 		// draw scene as normal
+		
 		modelShader.use();
 		modelShader.setMat4("projection", projection);
 		modelShader.setMat4("view", view);
-
-		// render the loaded model
-		glm::mat4 model;
 		model = glm::scale(model, glm::vec3(0.0004f, 0.0004f, 0.0004f));    // it's a bit too big for our scene, so scale it down
-		//model = glm::translate(model, glm::vec3(0.0f, 0.0f, -20.0f));
-		model = glm::translate(model, glm::vec3(0.0f, 0.0f, -2.0f * count)); // translate it down so it's at the center of the scene
-		//model = camera.GetViewMatrix();
-
-		glm::vec4 test = model * glm::vec4(0, 0, 0, 1);
-		/*
-		for (int i = 0; i < 4; i++) {
-			for (int j = 0; j < 4; j++)
-				cout << model[j][i] << ' ';
-			cout << endl;
-		}
-
-		for (int i = 0; i < 4; i++)
-			cout << test[i] << ' ';
-		cout << endl;
-		*/
+																			//model = glm::translate(model, glm::vec3(0.0f, 0.0f, -20.0f));
+		model = glm::translate(model, glm::vec3(0.0f, 0.0f, -10.0f * count - 50.0f)); // translate it down so it's at the center of the scene
 		modelShader.setMat4("model", model);
-		shipModel.Draw(modelShader);
+		normalShader.setMat4("model", model);
+		shipModel.Draw(normalShader);
 
 		//ªÊ÷∆∑…¥¨AABBƒ£–Õ
 		AABBShader.use();
@@ -321,7 +384,7 @@ int main()
 		for (int i = 0; i < 11; i++) {
 			if (shipAABB.IsIntersection(spheresAABB[i])) {
 				RenderText("GameOver!", 525.0f, 525.0f, 3.0f, glm::vec3(1.0f, 0.0f, 0.0f), SCR_WIDTH, SCR_HEIGHT);
-				cout << "crash ball " << i << " game over!!!" << endl;
+				//cout << "crash ball " << i << " game over!!!" << endl;
 			}
 		}
 
@@ -357,7 +420,17 @@ void processInput(GLFWwindow *window)
 	//∞¥œ¬Mœ‘ æ/“˛≤ÿ≈ˆ◊≤∫–
 	if (glfwGetKey(window, GLFW_KEY_M) == GLFW_PRESS)
 		ShowAABB = 1 - ShowAABB;
+	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS && !shadowsKeyPressed)
+	{
+		shadows = !shadows;
+		shadowsKeyPressed = true;
+	}
+	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_RELEASE)
+	{
+		shadowsKeyPressed = false;
+	}
 }
+
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
 // ---------------------------------------------------------------------------------------------

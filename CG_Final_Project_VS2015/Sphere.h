@@ -27,22 +27,20 @@ public:
 		createSphere(divide, radius, picturePath);
 	}
 
-	void Draw(Shader shader, const glm::mat4& transform, const glm::mat4& view, const glm::mat4& projection) {
-		//更新圆心坐标位置
-		glm::vec4 temp = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
-		glm::vec4 result = transform * temp;
-		vertices[0] = result.x;
-		vertices[1] = result.y;
-		vertices[2] = result.z;
-		//cout << vertices[0] << " " << vertices[1] << " " << vertices[2] << endl;
-
+	void Draw(Shader shader, const glm::mat4& transform, const glm::mat4& view, const glm::mat4& projection, unsigned int depthCubemap = 0) {
+		
+		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, sphereTexture);
+		if (depthCubemap != 0) {
+			glActiveTexture(GL_TEXTURE1);
+			glBindTexture(GL_TEXTURE_CUBE_MAP, depthCubemap);
+		}
 		shader.use();
 		shader.setMat4("projection", projection);
 		shader.setMat4("view", view);
 		shader.setMat4("transform", transform);
 		glBindVertexArray(sphereVAO);//绑定VAO
-		glDrawArrays(GL_TRIANGLE_STRIP, 0, (vertices.size() - 3) / 8);//绘制图元
+		glDrawArrays(GL_TRIANGLE_STRIP, 0, vertices.size() / 8);//绘制图元
 	}
 private:
 	/* Functions */
@@ -54,16 +52,11 @@ private:
 		float ey;//点的y坐标
 		float ez;//点的z坐标
 
-		//将圆心压入顶点数组
-		for (int i = 0; i < 3; i++) {
-			vertices.push_back(0.0f);
-		}
-		
 		//将维度等分成divide份，这样就能计算出每一等份的纬度值
 		for (int i = 0; i <= divide; i++) {
 			altitude = (float)(pi / 2.0 - i * pi / divide);//获取当前等份的纬度值
 			altitudeDelta = (float)(pi / 2.0 - (i + 1) * pi / divide);//获取下一等份的纬度值
-			//将经度等分成divide份，这样就能得到当前纬度值和下一纬度值的每一份经度值
+																	  //将经度等分成divide份，这样就能得到当前纬度值和下一纬度值的每一份经度值
 			for (int j = 0; j <= divide; j++) {
 				azimuth = (float)(j * (pi * 2) / divide);//计算经度值
 				ex = (float)(cos(altitude) * cos(azimuth));
@@ -102,18 +95,18 @@ private:
 		glGenVertexArrays(1, &sphereVAO);//生成一个VAO对象
 		glGenBuffers(1, &sphereVBO);//生成一个VBO对象
 		glBindVertexArray(sphereVAO);//绑定VAO
-		//把顶点数组复制到缓冲中供OpengGL使用
+									 //把顶点数组复制到缓冲中供OpengGL使用
 		glBindBuffer(GL_ARRAY_BUFFER, sphereVBO);//把新创建的缓冲VBO绑定到GL_ARRAY_BUFFER目标上
 		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertices.size(), &vertices[0], GL_STATIC_DRAW);//把之前定义的顶点数据points_vertices复制到缓冲的内存中
 		//链接顶点属性
 		//位置属性，值为0
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));//解析顶点数据
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(0 * sizeof(float)));//解析顶点数据
 		glEnableVertexAttribArray(0);
 		//纹理属性，值为1
-		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));//解析顶点数据
+		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));//解析顶点数据
 		glEnableVertexAttribArray(1);
 		//法向量属性，值为2
-		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(8 * sizeof(float)));//解析顶点数据
+		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(5 * sizeof(float)));//解析顶点数据
 		glEnableVertexAttribArray(2);
 
 		//*******纹理1*******

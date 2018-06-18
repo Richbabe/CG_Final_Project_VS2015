@@ -1,16 +1,30 @@
-//顶点着色器源代码
 #version 330 core
 layout (location = 0) in vec3 aPos;
-layout (location = 1) in vec2 aTexCoord;
+layout (location = 1) in vec2 aTexCoords;
+layout (location = 2) in vec3 aNormal;
 
-uniform mat4 transform;//变换矩阵
-uniform mat4 view;//观察矩阵
-uniform mat4 projection;//投影矩阵
+out vec2 TexCoords;
 
-out vec2 TexCoord;
+out VS_OUT {
+    vec3 FragPos;
+    vec3 Normal;
+    vec2 TexCoords;
+} vs_out;
+
+uniform mat4 projection;
+uniform mat4 view;
+uniform mat4 model;
+uniform mat4 transform;
+
+uniform bool reverse_normals;
 
 void main()
 {
-    gl_Position = projection * view * transform * vec4(aPos, 1.0f);//获得变换后的位置
-    TexCoord = vec2(aTexCoord.x, aTexCoord.y);
+    vs_out.FragPos = vec3(model * transform * vec4(aPos, 1.0));
+    if(reverse_normals) // a slight hack to make sure the outer large cube displays lighting from the 'inside' instead of the default 'outside'.
+        vs_out.Normal = transpose(inverse(mat3(model*transform))) * (-1.0 * aNormal);
+    else
+        vs_out.Normal = transpose(inverse(mat3(model*transform))) * aNormal;
+    vs_out.TexCoords = aTexCoords;
+    gl_Position = projection * view * model * transform * vec4(aPos, 1.0);
 }

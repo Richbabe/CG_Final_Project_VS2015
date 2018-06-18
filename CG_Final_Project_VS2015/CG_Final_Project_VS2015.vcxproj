@@ -76,6 +76,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>F:\learning\CG_Final_Project_VS2015-master\CG_Final_Project_VS2015\resources\include;$(IncludePath)</IncludePath>
+    <LibraryPath>F:\learning\CG_Final_Project_VS2015-master\CG_Final_Project_VS2015\resources\include;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -111,6 +113,8 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>glfw3.lib;glew32s.lib;freetype.lib;assimp-vc140-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>F:\learning\CG_Final_Project_VS2015-master\CG_Final_Project_VS2015\resources\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -152,6 +156,9 @@
   <ItemGroup>
     <None Include="cubemap.fs" />
     <None Include="cubemap.vs" />
+    <None Include="depth.fs" />
+    <None Include="depth.gs" />
+    <None Include="depth.vs" />
     <None Include="model.fs" />
     <None Include="model.vs" />
     <None Include="shader.fs" />
