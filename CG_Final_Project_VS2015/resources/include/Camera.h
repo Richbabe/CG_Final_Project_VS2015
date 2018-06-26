@@ -7,7 +7,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include <vector>
-
+/*
 //定义摄像机的运动
 enum Camera_Movement {
 	FORWARD,
@@ -15,7 +15,7 @@ enum Camera_Movement {
 	LEFT,
 	RIGHT
 };
-
+*/
 //定义摄像机参数
 const float YAW = -90.0f;//偏航角,因为偏航角为0时会导致方向向量指向右边，因此我们需要往左边旋转一点
 const float PITCH = 0.0f;//俯仰角
@@ -66,6 +66,13 @@ public:
 		return glm::lookAt(Position, Position + Front, Up);
 	}
 
+	//定义飞船的view
+	glm::mat4 GetShipViewMatrix(glm::vec3 shipPos)
+	{
+		return glm::lookAt(glm::vec3(shipPos.x,shipPos.y + 0.1,shipPos.z + 0.05) - 0.5f * Front, shipPos, Up);
+	}
+
+	/*
 	//处理键盘输入
 	void ProcessKeyboard(Camera_Movement direction, float deltaTime)
 	{
@@ -83,7 +90,7 @@ public:
 			Position += Right * velocity;
 		}
 	}
-
+	*/
 	//处理鼠标输入
 	void ProcessMouseMovement(float xoffset, float yoffset, GLboolean constrainPitch = true)
 	{
@@ -123,6 +130,10 @@ public:
 		if (Zoom >= 45.0f) {
 			Zoom = 45.0f;
 		}
+	}
+
+	void SetPosition(glm::vec3 p) {
+		Position = p;
 	}
 
 private:

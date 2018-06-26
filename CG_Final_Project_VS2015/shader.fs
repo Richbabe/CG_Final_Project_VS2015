@@ -55,7 +55,7 @@ void main()
     vec3 normal = normalize(fs_in.Normal);
     vec3 lightColor = vec3(0.3);
     // ambient
-    vec3 ambient = 1.0 * color;
+    vec3 ambient = 0.2 * color;
     // diffuse
     vec3 lightDir = normalize(lightPos - fs_in.FragPos);
     float diff = max(dot(lightDir, normal), 0.0);
@@ -69,7 +69,7 @@ void main()
     vec3 specular = spec * lightColor;    
     // calculate shadow
     float shadow = shadows ? ShadowCalculation(fs_in.FragPos) : 0.0;                      
-    vec3 lighting = (ambient + diffuse) * color;    
+    vec3 lighting = (ambient + 4.0 * diffuse) * color;    
     
     FragColor = vec4(lighting, 1.0);
 }

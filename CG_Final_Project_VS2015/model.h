@@ -25,10 +25,22 @@ using namespace std;
 
 unsigned int TextureFromFile(const char *path, const string &directory, bool gamma = false);
 
+//定义模型的运动
+enum Model_Movement {
+	FORWARD,
+	BACKWARD,
+	LEFT,
+	RIGHT,
+	UP,
+	DOWN
+};
+const float MoveSpeed = 2.0f;//设置模型移动速度
+
 class Model
 {
 public:
 	/*  Model Data */
+	glm::vec3 Position;//模型位置
 	vector<Texture> textures_loaded;    // stores all the textures loaded so far, optimization to make sure textures aren't loaded more than once.
 	vector<Mesh> meshes;
 	string directory;
@@ -37,6 +49,10 @@ public:
 	//默认构造函数
 	Model() {
 
+	}
+
+	Model(glm::vec3 position) {
+		Position = position;
 	}
 
 	/*  Functions   */
@@ -51,6 +67,24 @@ public:
 	{
 		for (unsigned int i = 0; i < meshes.size(); i++)
 			meshes[i].Draw(shader);
+	}
+
+	//处理键盘输入
+	void ProcessKeyboard(Model_Movement direction, float deltaTime,glm::vec3 front)
+	{
+		float velocity = MoveSpeed * deltaTime;
+		if (direction == FORWARD) {
+			Position += front * velocity;
+		}
+		if (direction == BACKWARD) {
+			Position -= front * velocity;
+		}
+		if (direction == LEFT) {
+			Position -= glm::normalize(glm::cross(front, glm::vec3(0.0f,1.0f,0.0f))) * velocity;
+		}
+		if (direction == RIGHT) {
+			Position += glm::normalize(glm::cross(front, glm::vec3(0.0f, 1.0f, 0.0f)))  * velocity;
+		}
 	}
 
 private:

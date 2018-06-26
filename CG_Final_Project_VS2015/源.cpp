@@ -29,6 +29,7 @@ const unsigned int SCR_HEIGHT = 1080;
 
 // camera
 Camera camera(glm::vec3(0.0f, 0.0f, 8.0f));
+Model ship(glm::vec3(0.0f, 0.0f, 8.0f));
 float lastX = (float)SCR_WIDTH / 2.0;
 float lastY = (float)SCR_HEIGHT / 2.0;
 bool firstMouse = true;
@@ -93,6 +94,7 @@ int main()
 	Shader modelShader("model.vs", "model.fs");
 	Shader AABBShader("AABBshader.vs", "AABBshader.fs");
 	Shader simpleDepthShader("depth.vs", "depth.fs", "depth.gs");
+	Shader sunShader("sunShader.vs", "sunShader.fs");
 
 	test_vao(SCR_WIDTH, SCR_HEIGHT);//text
 
@@ -142,8 +144,8 @@ int main()
 		std::string("resources/textures/space_skybox/left.tga"),
 		std::string("resources/textures/space_skybox/top.tga"),
 		std::string("resources/textures/space_skybox/bottom.tga"),
-		std::string("resources/textures/space_skybox/front.tga"),
 		std::string("resources/textures/space_skybox/back.tga"),
+		std::string("resources/textures/space_skybox/front.tga"),
 	};
 	Skybox skybox(faces);
 
@@ -219,6 +221,8 @@ int main()
 		// view/projection transformations
 		glm::mat4 projection = glm::perspective(45.0f, (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 1000.0f);
 		glm::mat4 view = camera.GetViewMatrix();
+		glm::mat4 shipView = camera.GetShipViewMatrix(ship.Position);
+		
 
 		//renderScene(normalShader, AABBShader,modelShader, spheres, spheresAABB, shipAABB, shipModel, count);
 
@@ -333,45 +337,50 @@ int main()
 		normalShader.setVec3("viewPos", camera.Position);
 		normalShader.setInt("shadows", shadows); // enable/disable shadows by pressing 'SPACE'
 		normalShader.setFloat("far_plane", far_plane);
-		spheres[0].Draw(normalShader, sun_trans, view, projection, depthCubemap);
-		spheres[1].Draw(normalShader, mercury_trans, view, projection, depthCubemap);
-		spheres[2].Draw(normalShader, venus_trans, view, projection, depthCubemap);
-		spheres[3].Draw(normalShader, earth_trans, view, projection, depthCubemap);
-		spheres[4].Draw(normalShader, moon_trans, view, projection, depthCubemap);
-		spheres[5].Draw(normalShader, mars_trans, view, projection, depthCubemap);
-		spheres[6].Draw(normalShader, jupiter_trans, view, projection, depthCubemap);
-		spheres[7].Draw(normalShader, saturn_trans, view, projection, depthCubemap);
-		spheres[8].Draw(normalShader, uranus_trans, view, projection, depthCubemap);
-		spheres[9].Draw(normalShader, neptune_trans, view, projection, depthCubemap);
-		spheres[10].Draw(normalShader, pluto_trans, view, projection, depthCubemap);
+		spheres[0].Draw(sunShader, sun_trans, shipView, projection, depthCubemap);
+		spheres[1].Draw(normalShader, mercury_trans, shipView, projection, depthCubemap);
+		spheres[2].Draw(normalShader, venus_trans, shipView, projection, depthCubemap);
+		spheres[3].Draw(normalShader, earth_trans, shipView, projection, depthCubemap);
+		spheres[4].Draw(normalShader, moon_trans, shipView, projection, depthCubemap);
+		spheres[5].Draw(normalShader, mars_trans, shipView, projection, depthCubemap);
+		spheres[6].Draw(normalShader, jupiter_trans, shipView, projection, depthCubemap);
+		spheres[7].Draw(normalShader, saturn_trans, shipView, projection, depthCubemap);
+		spheres[8].Draw(normalShader, uranus_trans, shipView, projection, depthCubemap);
+		spheres[9].Draw(normalShader, neptune_trans, shipView, projection, depthCubemap);
+		spheres[10].Draw(normalShader, pluto_trans, shipView, projection, depthCubemap);
 		
-		spheresAABB[0].drawAABB(AABBShader, sun_trans, view, projection, ShowAABB);//»æÖÆÌ«ÑôAABBÅö×²ºÐ
-		spheresAABB[1].drawAABB(AABBShader, mercury_trans, view, projection, ShowAABB);
-		spheresAABB[2].drawAABB(AABBShader, venus_trans, view, projection, ShowAABB);
-		spheresAABB[3].drawAABB(AABBShader, earth_trans, view, projection, ShowAABB);
-		spheresAABB[4].drawAABB(AABBShader, moon_trans, view, projection, ShowAABB);
-		spheresAABB[5].drawAABB(AABBShader, mars_trans, view, projection, ShowAABB);
-		spheresAABB[6].drawAABB(AABBShader, jupiter_trans, view, projection, ShowAABB);
-		spheresAABB[7].drawAABB(AABBShader, saturn_trans, view, projection, ShowAABB);
-		spheresAABB[8].drawAABB(AABBShader, uranus_trans, view, projection, ShowAABB);
-		spheresAABB[9].drawAABB(AABBShader, neptune_trans, view, projection, ShowAABB);
-		spheresAABB[10].drawAABB(AABBShader, pluto_trans, view, projection, ShowAABB);
+		spheresAABB[0].drawAABB(AABBShader, sun_trans, shipView, projection, ShowAABB);//»æÖÆÌ«ÑôAABBÅö×²ºÐ
+		spheresAABB[1].drawAABB(AABBShader, mercury_trans, shipView, projection, ShowAABB);
+		spheresAABB[2].drawAABB(AABBShader, venus_trans, shipView, projection, ShowAABB);
+		spheresAABB[3].drawAABB(AABBShader, earth_trans, shipView, projection, ShowAABB);
+		spheresAABB[4].drawAABB(AABBShader, moon_trans, shipView, projection, ShowAABB);
+		spheresAABB[5].drawAABB(AABBShader, mars_trans, shipView, projection, ShowAABB);
+		spheresAABB[6].drawAABB(AABBShader, jupiter_trans, shipView, projection, ShowAABB);
+		spheresAABB[7].drawAABB(AABBShader, saturn_trans, shipView, projection, ShowAABB);
+		spheresAABB[8].drawAABB(AABBShader, uranus_trans, shipView, projection, ShowAABB);
+		spheresAABB[9].drawAABB(AABBShader, neptune_trans, shipView, projection, ShowAABB);
+		spheresAABB[10].drawAABB(AABBShader, pluto_trans, shipView, projection, ShowAABB);
 
 		// draw scene as normal
 		
 		modelShader.use();
 		modelShader.setMat4("projection", projection);
-		modelShader.setMat4("view", view);
-		model = glm::scale(model, glm::vec3(0.0004f, 0.0004f, 0.0004f));    // it's a bit too big for our scene, so scale it down
-																			//model = glm::translate(model, glm::vec3(0.0f, 0.0f, -20.0f));
-		model = glm::translate(model, glm::vec3(0.0f, 0.0f, -10.0f * count - 50.0f)); // translate it down so it's at the center of the scene
+		modelShader.setMat4("view", shipView);
+		model = glm::scale(model, glm::vec3(0.0001f, 0.0001f, 0.0001f));    // it's a bit too big for our scene, so scale it down
+		//model = glm::translate(model, glm::vec3(0.0f, 0.0f, -20.0f));
+		//cout << camera.Position.x << " " << camera.Position.y << " " << camera.Position.z  << " " << endl;
+		//model = glm::translate(model, glm::vec3(0.0f, 0.0f, 10.0f)); // translate it down so it's at the center of the scene
+		model = glm::translate(model, ship.Position / 0.0001f); // translate it down so it's at the center of the scene
+		model = glm::rotate(model, -camera.Yaw - 90, glm::vec3(0.0, 1.0, 0.0));
+		model = glm::rotate(model, camera.Pitch, glm::vec3(1.0, 0.0, 0.0));
+		camera.SetPosition(glm::vec3(ship.Position.x, ship.Position.y, ship.Position.z));
+		//cout << camera.Yaw << endl;
 		modelShader.setMat4("model", model);
-		normalShader.setMat4("model", model);
-		shipModel.Draw(normalShader);
+		shipModel.Draw(modelShader);
 
 		//»æÖÆ·É´¬AABBÄ£ÐÍ
 		AABBShader.use();
-		shipAABB.drawAABB(AABBShader, model, view, projection, ShowAABB);
+		shipAABB.drawAABB(AABBShader, model, shipView, projection, ShowAABB);
 		/*
 		cout << "ship:" << endl;
 		cout << "xMin:" << shipAABB.xMin << " xMax:" << shipAABB.xMax << endl;
@@ -410,13 +419,13 @@ void processInput(GLFWwindow *window)
 		glfwSetWindowShouldClose(window, true);
 
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-		camera.ProcessKeyboard(FORWARD, deltaTime);
+		ship.ProcessKeyboard(FORWARD, deltaTime, camera.Front);
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-		camera.ProcessKeyboard(BACKWARD, deltaTime);
+		ship.ProcessKeyboard(BACKWARD, deltaTime, camera.Front);
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-		camera.ProcessKeyboard(LEFT, deltaTime);
+		ship.ProcessKeyboard(LEFT, deltaTime, camera.Front);
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-		camera.ProcessKeyboard(RIGHT, deltaTime);
+		ship.ProcessKeyboard(RIGHT, deltaTime, camera.Front);
 	//°´ÏÂMÏÔÊ¾/Òþ²ØÅö×²ºÐ
 	if (glfwGetKey(window, GLFW_KEY_M) == GLFW_PRESS)
 		ShowAABB = 1 - ShowAABB;
