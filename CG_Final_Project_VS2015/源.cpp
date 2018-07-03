@@ -100,7 +100,7 @@ int main()
 
 	Model shipModel(std::string("resources/objects/F15C/F-15C_Eagle.dae"));// loading the model
 
-	AABB shipAABB(shipModel);//·É´¬AABBÅö×²Ä£ÐÍ
+	AABB shipAABB(shipModel);//ï¿½É´ï¿½AABBï¿½ï¿½×²Ä£ï¿½ï¿½
 
 	/*cout << "ship:" << endl;
 	cout << "xMin:" << shipAABB.xMin << " xMax:" << shipAABB.xMax << endl;
@@ -115,23 +115,23 @@ int main()
 	float raidus[11] = { 0.80, 0.10, 0.20, 0.25, 0.05, 0.15, 0.30, 0.35, 0.35, 0.40, 0.10};
 	vector<string> textureMap
 	{
-		string("resources/textures/planet/Ì«Ñô.jpg"),
-		string("resources/textures/planet/Ë®ÐÇ.jpg"),
-		string("resources/textures/planet/½ðÐÇ.jpg"),
-		string("resources/textures/planet/µØÇò.jpg"),
-		string("resources/textures/planet/ÔÂÇò.jpg"),
-		string("resources/textures/planet/»ðÐÇ.jpg"),
-		string("resources/textures/planet/Ä¾ÐÇ.jpg"),
-		string("resources/textures/planet/ÍÁÐÇ.jpg"),
-		string("resources/textures/planet/ÌìÍõÐÇ.jpg"),
-		string("resources/textures/planet/º£ÍõÐÇ.jpg"),
-		string("resources/textures/planet/Ú¤ÍõÐÇ.jpg"),
+		string("resources/textures/planet/Ì«ï¿½ï¿½.jpg"),
+		string("resources/textures/planet/Ë®ï¿½ï¿½.jpg"),
+		string("resources/textures/planet/ï¿½ï¿½ï¿½ï¿½.jpg"),
+		string("resources/textures/planet/ï¿½ï¿½ï¿½ï¿½.jpg"),
+		string("resources/textures/planet/ï¿½ï¿½ï¿½ï¿½.jpg"),
+		string("resources/textures/planet/ï¿½ï¿½ï¿½ï¿½.jpg"),
+		string("resources/textures/planet/Ä¾ï¿½ï¿½.jpg"),
+		string("resources/textures/planet/ï¿½ï¿½ï¿½ï¿½.jpg"),
+		string("resources/textures/planet/ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½.jpg"),
+		string("resources/textures/planet/ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½.jpg"),
+		string("resources/textures/planet/Ú¤ï¿½ï¿½ï¿½ï¿½.jpg"),
 	};
 
 	for (int i = 0; i < 11; i++)
 		spheres[i] = Sphere(divide, raidus[i], textureMap[i]);
 
-	AABB spheresAABB[11];//ÐÇÇòÅö×²ºÐ
+	AABB spheresAABB[11];//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×²ï¿½ï¿½
 	for (int i = 0; i < 11; i++) {
 		spheresAABB[i] = AABB(spheres[i]);
 	}
@@ -148,7 +148,7 @@ int main()
 		std::string("resources/textures/space_skybox/front.tga"),
 	};
 	Skybox skybox(faces);
-	/*
+
 	const unsigned int SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024;
 	unsigned int depthMapFBO;
 	glGenFramebuffers(1, &depthMapFBO);
@@ -169,7 +169,7 @@ int main()
 	glDrawBuffer(GL_NONE);
 	glReadBuffer(GL_NONE);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	*/
+
 	// shader configuration
 	// --------------------
 	shader.use();
@@ -205,7 +205,6 @@ int main()
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		/*
 		float near_plane = 1.0f;
 		float far_plane = 25.0f;
 		glm::mat4 shadowProj = glm::perspective(glm::radians(90.0f), (float)SHADOW_WIDTH / (float)SHADOW_HEIGHT, near_plane, far_plane);
@@ -216,7 +215,7 @@ int main()
 		shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f)));
 		shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
 		shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
-		*/
+
 
 
 		// view/projection transformations
@@ -229,23 +228,24 @@ int main()
 
 
 		// draw sun
-		glm::mat4 sun_trans(1);//±ä»»¾ØÕó
+		glm::mat4 sun_trans(1);//ï¿½ä»»ï¿½ï¿½ï¿½ï¿½
 
 		// draw mercury
-		glm::mat4 mercury_trans(1);//±ä»»¾ØÕó
+		glm::mat4 mercury_trans(1);//ï¿½ä»»ï¿½ï¿½ï¿½ï¿½
 		mercury_trans = glm::rotate(mercury_trans, (float)glfwGetTime() * 10 * glm::radians(20.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		mercury_trans = glm::translate(mercury_trans, glm::vec3(1.5, 0.0, 0.0));
 		mercury_trans = glm::rotate(mercury_trans, (float)glfwGetTime() * 10 * glm::radians(50.0f), glm::vec3(0.0f, 1.0f, 1.0f));
 
 		// draw venus
-		glm::mat4 venus_trans(1);//±ä»»¾ØÕó
+		glm::mat4 venus_trans(1);//ï¿½ä»»ï¿½ï¿½ï¿½ï¿½
 		venus_trans = glm::rotate(venus_trans, (float)glfwGetTime() * glm::radians(30.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		venus_trans = glm::translate(venus_trans, glm::vec3(2.5, 0.0, 0.0));
 		venus_trans = glm::rotate(venus_trans, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.0f, 1.0f, 1.0f));
 		
+
 		// draw earth
 		static glm::vec4 earth_position(0.0, 0.0, 0.0, 1.0);
-		glm::mat4 earth_trans(1);//±ä»»¾ØÕó
+		glm::mat4 earth_trans(1);//ï¿½ä»»ï¿½ï¿½ï¿½ï¿½
 		earth_trans = glm::rotate(earth_trans, (float)glfwGetTime() * glm::radians(40.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		earth_trans = glm::translate(earth_trans, glm::vec3(3.5, 0.0, 0.0));
 		earth_position = earth_trans * earth_position;
@@ -255,7 +255,7 @@ int main()
 		int earth_moon_radium = 0.2;
 		//int dx = earth_moon_radium * cos((float)glfwGetTime());
 		//int dz = earth_moon_radium * sin((float)glfwGetTime());
-		glm::mat4 moon_trans = earth_trans;//±ä»»¾ØÕó
+		glm::mat4 moon_trans = earth_trans;//ï¿½ä»»ï¿½ï¿½ï¿½ï¿½
 		//moon_trans = glm::rotate(moon_trans, (float)glfwGetTime() * 10 * glm::radians(50.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		moon_trans = glm::translate(moon_trans, glm::vec3(0.8, 0.0, 0.0));
 		//moon_trans =
@@ -264,40 +264,40 @@ int main()
 		
 
 		// draw mars
-		glm::mat4 mars_trans(1);//±ä»»¾ØÕó
+		glm::mat4 mars_trans(1);//ï¿½ä»»ï¿½ï¿½ï¿½ï¿½
 		mars_trans = glm::rotate(mars_trans, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		mars_trans = glm::translate(mars_trans, glm::vec3(5.0, 0.0, 0.0));
 		mars_trans = glm::rotate(mars_trans, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.0f, 1.0f, 1.0f));
 		
 
 		// draw jupiter
-		glm::mat4 jupiter_trans(1);//±ä»»¾ØÕó
+		glm::mat4 jupiter_trans(1);//ï¿½ä»»ï¿½ï¿½ï¿½ï¿½
 		jupiter_trans = glm::rotate(jupiter_trans, (float)glfwGetTime() * glm::radians(70.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		jupiter_trans = glm::translate(jupiter_trans, glm::vec3(6.2, 0.0, 0.0));
 		jupiter_trans = glm::rotate(jupiter_trans, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.0f, 1.0f, 1.0f));
 		
 
 		// draw saturn
-		glm::mat4 saturn_trans(1);//±ä»»¾ØÕó
+		glm::mat4 saturn_trans(1);//ï¿½ä»»ï¿½ï¿½ï¿½ï¿½
 		saturn_trans = glm::rotate(saturn_trans, (float)glfwGetTime() * glm::radians(80.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		saturn_trans = glm::translate(saturn_trans, glm::vec3(7.6, 0.0, 0.0));
 		saturn_trans = glm::rotate(saturn_trans, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.0f, 1.0f, 1.0f));
 
 		// draw uranus
-		glm::mat4 uranus_trans(1);//±ä»»¾ØÕó
+		glm::mat4 uranus_trans(1);//ï¿½ä»»ï¿½ï¿½ï¿½ï¿½
 		uranus_trans = glm::rotate(uranus_trans, (float)glfwGetTime() * glm::radians(100.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		uranus_trans = glm::translate(uranus_trans, glm::vec3(8.9, 0.0, 0.0));
 		uranus_trans = glm::rotate(uranus_trans, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.0f, 1.0f, 1.0f));
 
 		// draw neptune
-		glm::mat4 neptune_trans(1);//±ä»»¾ØÕó
+		glm::mat4 neptune_trans(1);//ï¿½ä»»ï¿½ï¿½ï¿½ï¿½
 		neptune_trans = glm::rotate(neptune_trans, (float)glfwGetTime() * glm::radians(120.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		neptune_trans = glm::translate(neptune_trans, glm::vec3(10.5, 0.0, 0.0));
 		neptune_trans = glm::rotate(neptune_trans, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.0f, 1.0f, 1.0f));
 		
 
 		// draw pluto
-		glm::mat4 pluto_trans(1);//±ä»»¾ØÕó
+		glm::mat4 pluto_trans(1);//ï¿½ä»»ï¿½ï¿½ï¿½ï¿½
 		pluto_trans = glm::rotate(pluto_trans, (float)glfwGetTime() * glm::radians(130.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		pluto_trans = glm::translate(pluto_trans, glm::vec3(12, 0.0, 0.0));
 		pluto_trans = glm::rotate(pluto_trans, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.0f, 1.0f, 1.0f));
@@ -305,7 +305,6 @@ int main()
 		glm::mat4 model = glm::mat4();
 		model = glm::scale(model, glm::vec3(1.0f));
 
-		/*
 		glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
 		glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
 		glClear(GL_DEPTH_BUFFER_BIT);
@@ -327,7 +326,7 @@ int main()
 		spheres[9].Draw(simpleDepthShader, neptune_trans, view, projection);
 		spheres[10].Draw(simpleDepthShader, pluto_trans, view, projection);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		*/
+
 		glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		normalShader.use();
@@ -337,20 +336,20 @@ int main()
 		normalShader.setVec3("lightPos", lightPos);
 		normalShader.setVec3("viewPos", camera.Position);
 		normalShader.setInt("shadows", shadows); // enable/disable shadows by pressing 'SPACE'
-		//normalShader.setFloat("far_plane", far_plane);
-		spheres[0].Draw(sunShader, sun_trans, shipView, projection);
-		spheres[1].Draw(normalShader, mercury_trans, shipView, projection);
-		spheres[2].Draw(normalShader, venus_trans, shipView, projection);
-		spheres[3].Draw(normalShader, earth_trans, shipView, projection);
-		spheres[4].Draw(normalShader, moon_trans, shipView, projection);
-		spheres[5].Draw(normalShader, mars_trans, shipView, projection);
-		spheres[6].Draw(normalShader, jupiter_trans, shipView, projection);
-		spheres[7].Draw(normalShader, saturn_trans, shipView, projection);
-		spheres[8].Draw(normalShader, uranus_trans, shipView, projection);
-		spheres[9].Draw(normalShader, neptune_trans, shipView, projection);
-		spheres[10].Draw(normalShader, pluto_trans, shipView, projection);
+		normalShader.setFloat("far_plane", far_plane);
+		spheres[0].Draw(sunShader, sun_trans, shipView, projection, depthCubemap);
+		spheres[1].Draw(normalShader, mercury_trans, shipView, projection, depthCubemap);
+		spheres[2].Draw(normalShader, venus_trans, shipView, projection, depthCubemap);
+		spheres[3].Draw(normalShader, earth_trans, shipView, projection, depthCubemap);
+		spheres[4].Draw(normalShader, moon_trans, shipView, projection, depthCubemap);
+		spheres[5].Draw(normalShader, mars_trans, shipView, projection, depthCubemap);
+		spheres[6].Draw(normalShader, jupiter_trans, shipView, projection, depthCubemap);
+		spheres[7].Draw(normalShader, saturn_trans, shipView, projection, depthCubemap);
+		spheres[8].Draw(normalShader, uranus_trans, shipView, projection, depthCubemap);
+		spheres[9].Draw(normalShader, neptune_trans, shipView, projection, depthCubemap);
+		spheres[10].Draw(normalShader, pluto_trans, shipView, projection, depthCubemap);
 		
-		spheresAABB[0].drawAABB(AABBShader, sun_trans, shipView, projection, ShowAABB);//»æÖÆÌ«ÑôAABBÅö×²ºÐ
+		spheresAABB[0].drawAABB(AABBShader, sun_trans, shipView, projection, ShowAABB);//ï¿½ï¿½ï¿½ï¿½Ì«ï¿½ï¿½AABBï¿½ï¿½×²ï¿½ï¿½
 		spheresAABB[1].drawAABB(AABBShader, mercury_trans, shipView, projection, ShowAABB);
 		spheresAABB[2].drawAABB(AABBShader, venus_trans, shipView, projection, ShowAABB);
 		spheresAABB[3].drawAABB(AABBShader, earth_trans, shipView, projection, ShowAABB);
@@ -379,7 +378,7 @@ int main()
 		modelShader.setMat4("model", model);
 		shipModel.Draw(modelShader);
 
-		//»æÖÆ·É´¬AABBÄ£ÐÍ
+		//ï¿½ï¿½ï¿½Æ·É´ï¿½AABBÄ£ï¿½ï¿½
 		AABBShader.use();
 		shipAABB.drawAABB(AABBShader, model, shipView, projection, ShowAABB);
 		/*
@@ -390,9 +389,9 @@ int main()
 		cout << "-----------------" << endl;
 		*/
 
-		//¼ì²â·É´¬ÊÇ·ñÓëÐÇÇòÅö×²
+		//ï¿½ï¿½ï¿½É´ï¿½ï¿½Ç·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×²
 		for (int i = 0; i < 11; i++) {
-			if (shipAABB.IsIntersection(spheresAABB[i])) {
+			if (shipAABB.IsIntersection(spheres[i])) {
 				RenderText("GameOver!", 525.0f, 525.0f, 3.0f, glm::vec3(1.0f, 0.0f, 0.0f), SCR_WIDTH, SCR_HEIGHT);
 				//cout << "crash ball " << i << " game over!!!" << endl;
 			}
@@ -427,7 +426,7 @@ void processInput(GLFWwindow *window)
 		ship.ProcessKeyboard(LEFT, deltaTime, camera.Front);
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 		ship.ProcessKeyboard(RIGHT, deltaTime, camera.Front);
-	//°´ÏÂMÏÔÊ¾/Òþ²ØÅö×²ºÐ
+	//ï¿½ï¿½ï¿½ï¿½Mï¿½ï¿½Ê¾/ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×²ï¿½ï¿½
 	if (glfwGetKey(window, GLFW_KEY_M) == GLFW_PRESS)
 		ShowAABB = 1 - ShowAABB;
 	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS && !shadowsKeyPressed)
