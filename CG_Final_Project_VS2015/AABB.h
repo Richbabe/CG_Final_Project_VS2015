@@ -22,17 +22,17 @@
 
 class AABB {
 public:
-	Model model;//Ä£ï¿½ï¿½
-	Sphere ball;//ï¿½ï¿½ï¿½ï¿½
-	float xMin;//xï¿½ï¿½ï¿½ï¿½Ð¡Öµ
-	float yMin;//yï¿½ï¿½ï¿½ï¿½Ð¡Öµ
-	float zMin;//zï¿½ï¿½ï¿½ï¿½Ð¡Öµ
-	float xMax;//xï¿½ï¿½ï¿½ï¿½ï¿½Öµ
-	float yMax;//yï¿½ï¿½ï¿½ï¿½ï¿½Öµ
-	float zMax;//zï¿½ï¿½ï¿½ï¿½ï¿½Öµ
-	unsigned int AABB_VAO;//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-	glm::vec3 AABB_vertices[8];//AABBï¿½ï¿½×²ï¿½Ðµï¿½8ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-	glm::vec3 aabb_vertices[8];//ï¿½ï¿½ï¿½ï¿½Ã¿ï¿½ï¿½ï¿½ï¿½×²ï¿½Ð³ï¿½Ê¼8ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î»ï¿½ï¿½
+	Model model;//Ä£ÐÍ
+	Sphere ball;//ÐÇÇò
+	float xMin;//xµÄ×îÐ¡Öµ
+	float yMin;//yµÄ×îÐ¡Öµ
+	float zMin;//zµÄ×îÐ¡Öµ
+	float xMax;//xµÄ×î´óÖµ
+	float yMax;//yµÄ×î´óÖµ
+	float zMax;//zµÄ×î´óÖµ
+	unsigned int AABB_VAO;//¶¥µãÊý×é¶ÔÏó
+	glm::vec3 AABB_vertices[8];//AABBÅö×²ºÐµÄ8¸ö¶¥µã
+	glm::vec3 aabb_vertices[8];//±£´æÃ¿¸öÅö×²ºÐ³õÊ¼8¸ö¶¥µãµÄÎ»ÖÃ
 
 	AABB() {
 
@@ -54,9 +54,9 @@ public:
 		createAABB();
 	}
 
-	//ï¿½ï¿½ï¿½ï¿½AABBï¿½ï¿½8ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	//¹¹½¨AABBºÐ8¸ö¶¥µã
 	void InitializeAABBvertices() {
-		//ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		//µÚÒ»¸ö¶¥µã
 		AABB_vertices[0].x = xMin;
 		AABB_vertices[0].y = yMax;
 		AABB_vertices[0].z = zMin;
@@ -65,7 +65,7 @@ public:
 		aabb_vertices[0].y = yMax;
 		aabb_vertices[0].z = zMin;
 
-		//ï¿½Ú¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		//µÚ¶þ¸ö¶¥µã
 		AABB_vertices[1].x = xMin;
 		AABB_vertices[1].y = yMax;
 		AABB_vertices[1].z = zMax;
@@ -74,7 +74,7 @@ public:
 		aabb_vertices[1].y = yMax;
 		aabb_vertices[1].z = zMax;
 
-		//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		//µÚÈý¸ö¶¥µã
 		AABB_vertices[2].x = xMax;
 		AABB_vertices[2].y = yMax;
 		AABB_vertices[2].z = zMin;
@@ -83,7 +83,7 @@ public:
 		aabb_vertices[2].y = yMax;
 		aabb_vertices[2].z = zMin;
 
-		//ï¿½ï¿½ï¿½Ä¸ï¿½ï¿½ï¿½ï¿½ï¿½
+		//µÚËÄ¸ö¶¥µã
 		AABB_vertices[3].x = xMax;
 		AABB_vertices[3].y = yMax;
 		AABB_vertices[3].z = zMax;
@@ -92,7 +92,7 @@ public:
 		aabb_vertices[3].y = yMax;
 		aabb_vertices[3].z = zMax;
 
-		//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		//µÚÎå¸ö¶¥µã
 		AABB_vertices[4].x = xMin;
 		AABB_vertices[4].y = yMin;
 		AABB_vertices[4].z = zMin;
@@ -101,7 +101,7 @@ public:
 		aabb_vertices[4].y = yMin;
 		aabb_vertices[4].z = zMin;
 
-		//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		//µÚÁù¸ö¶¥µã
 		AABB_vertices[5].x = xMin;
 		AABB_vertices[5].y = yMin;
 		AABB_vertices[5].z = zMax;
@@ -110,7 +110,7 @@ public:
 		aabb_vertices[5].y = yMin;
 		aabb_vertices[5].z = zMax;
 
-		//ï¿½ï¿½ï¿½ß¸ï¿½ï¿½ï¿½ï¿½ï¿½
+		//µÚÆß¸ö¶¥µã
 		AABB_vertices[6].x = xMax;
 		AABB_vertices[6].y = yMin;
 		AABB_vertices[6].z = zMin;
@@ -119,7 +119,7 @@ public:
 		aabb_vertices[6].y = yMin;
 		aabb_vertices[6].z = zMin;
 
-		//ï¿½Ú°Ë¸ï¿½ï¿½ï¿½ï¿½ï¿½
+		//µÚ°Ë¸ö¶¥µã
 		AABB_vertices[7].x = xMax;
 		AABB_vertices[7].y = yMin;
 		AABB_vertices[7].z = zMax;
@@ -129,7 +129,7 @@ public:
 		aabb_vertices[7].z = zMax;
 	}
 
-	//ï¿½ï¿½Ê¼ï¿½ï¿½Ä£ï¿½ï¿½AABBï¿½ï¿½
+	//³õÊ¼»¯Ä£ÐÍAABBºÐ
 	void InitializeModelAABB() {
 		xMin = 999999.0f;
 		xMax = -999999.0f;
@@ -141,25 +141,25 @@ public:
 		for (int i = 0; i < mesh.size(); i++) {
 			vector<Vertex> vertice = mesh[i].vertices;
 			for (int j = 0; j < vertice.size(); j++) {
-				//ï¿½ï¿½ï¿½ï¿½xï¿½ï¿½ï¿½ï¿½Ð¡Öµ
+				//¸üÐÂxµÄ×îÐ¡Öµ
 				xMin = min(xMin, vertice[j].Position.x);
-				//ï¿½ï¿½ï¿½ï¿½yï¿½ï¿½ï¿½ï¿½Ð¡Öµ
+				//¸üÐÂyµÄ×îÐ¡Öµ
 				yMin = min(yMin, vertice[j].Position.y);
-				//ï¿½ï¿½ï¿½ï¿½zï¿½ï¿½ï¿½ï¿½Ð¡Öµ
+				//¸üÐÂzµÄ×îÐ¡Öµ
 				zMin = min(zMin, vertice[j].Position.z);
 
-				//ï¿½ï¿½ï¿½ï¿½xï¿½ï¿½ï¿½ï¿½ï¿½Öµ
+				//¸üÐÂxµÄ×î´óÖµ
 				xMax = max(xMax, vertice[j].Position.x);
-				//ï¿½ï¿½ï¿½ï¿½yï¿½ï¿½ï¿½ï¿½ï¿½Öµ
+				//¸üÐÂyµÄ×î´óÖµ
 				yMax = max(yMax, vertice[j].Position.y);
-				//ï¿½ï¿½ï¿½ï¿½zï¿½ï¿½ï¿½ï¿½ï¿½Öµ
+				//¸üÐÂzµÄ×î´óÖµ
 				zMax = max(zMax, vertice[j].Position.z);
 			}
 		}
 		InitializeAABBvertices();
 	}
 
-	//ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½AABBï¿½ï¿½
+	//³õÊ¼»¯ÐÇÇòAABBºÐ
 	void InitializeSphereAABB() {
 		xMin = 999999.0f;
 		xMax = -999999.0f;
@@ -169,119 +169,119 @@ public:
 		zMax = -999999.0f;
 		vector<float> vertice = ball.vertices;
 		for (int i = 0; i < vertice.size(); i += 8) {
-			//ï¿½ï¿½ï¿½ï¿½xï¿½ï¿½ï¿½ï¿½Ð¡Öµ
+			//¸üÐÂxµÄ×îÐ¡Öµ
 			xMin = min(xMin, vertice[i]);
-			//ï¿½ï¿½ï¿½ï¿½yï¿½ï¿½ï¿½ï¿½Ð¡Öµ
+			//¸üÐÂyµÄ×îÐ¡Öµ
 			yMin = min(yMin, vertice[i + 1]);
-			//ï¿½ï¿½ï¿½ï¿½zï¿½ï¿½ï¿½ï¿½Ð¡Öµ
+			//¸üÐÂzµÄ×îÐ¡Öµ
 			zMin = min(zMin, vertice[i + 2]);
 
-			//ï¿½ï¿½ï¿½ï¿½xï¿½ï¿½ï¿½ï¿½ï¿½Öµ
+			//¸üÐÂxµÄ×î´óÖµ
 			xMax = max(xMax, vertice[i]);
-			//ï¿½ï¿½ï¿½ï¿½yï¿½ï¿½ï¿½ï¿½ï¿½Öµ
+			//¸üÐÂyµÄ×î´óÖµ
 			yMax = max(yMax, vertice[i + 1]);
-			//ï¿½ï¿½ï¿½ï¿½zï¿½ï¿½ï¿½ï¿½ï¿½Öµ
+			//¸üÐÂzµÄ×î´óÖµ
 			zMax = max(zMax, vertice[i + 2]);
 		}
 		InitializeAABBvertices();
 	}
 
-	//ï¿½ï¿½ï¿½ï¿½AABBï¿½ï¿½×²ï¿½Ð²ï¿½ï¿½ï¿½VAO
+	//´´½¨AABBÅö×²ºÐ²¢°ó¶¨VAO
 	void createAABB() {
 		float AABB_vertices[] = {
-			//Î»ï¿½ï¿½             //ï¿½ï¿½É«
-			//------ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½------
+			//Î»ÖÃ             //ÑÕÉ«
+			//------µÚÒ»¸ùÏß------
 			xMin, yMin, zMin,   1.0f, 0.0f, 0.0f,
 			xMax, yMin, zMin,   1.0f, 0.0f, 0.0f,
 
-			//------ï¿½Ú¶ï¿½ï¿½ï¿½ï¿½ï¿½------
+			//------µÚ¶þ¸ùÏß------
 			xMin, yMin, zMin,   1.0f, 0.0f, 0.0f,
 			xMin, yMin, zMax,   1.0f, 0.0f, 0.0f,
 
-			//------ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½------
+			//------µÚÈý¸ùÏß------
 			xMin, yMin, zMin,   1.0f, 0.0f, 0.0f,
 			xMin, yMax, zMin,   1.0f, 0.0f, 0.0f,
 
-			//------ï¿½ï¿½ï¿½Ä¸ï¿½ï¿½ï¿½------
+			//------µÚËÄ¸ùÏß------
 			xMin, yMin, zMax,   1.0f, 0.0f, 0.0f,
 			xMax, yMin, zMax,   1.0f, 0.0f, 0.0f,
 
-			//------ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½------
+			//------µÚÎå¸ùÏß------
 			xMax, yMin, zMin,   1.0f, 0.0f, 0.0f,
 			xMax, yMin, zMax,   1.0f, 0.0f, 0.0f,
 
-			//------ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½------
+			//------µÚÁù¸ùÏß------
 			xMax, yMin, zMin,   1.0f, 0.0f, 0.0f,
 			xMax, yMax, zMin,   1.0f, 0.0f, 0.0f,
 
-			//------ï¿½ï¿½ï¿½ß¸ï¿½ï¿½ï¿½------
+			//------µÚÆß¸ùÏß------
 			xMax, yMax, zMin,   1.0f, 0.0f, 0.0f,
 			xMin, yMax, zMin,   1.0f, 0.0f, 0.0f,
 
-			//------ï¿½Ú°Ë¸ï¿½ï¿½ï¿½------
+			//------µÚ°Ë¸ùÏß------
 			xMin, yMax, zMin,   1.0f, 0.0f, 0.0f,
 			xMin, yMax, zMax,   1.0f, 0.0f, 0.0f,
 
-			//------ï¿½Ú¾Å¸ï¿½ï¿½ï¿½------
+			//------µÚ¾Å¸ùÏß------
 			xMax, yMax, zMin,   1.0f, 0.0f, 0.0f,
 			xMax, yMax, zMax,   1.0f, 0.0f, 0.0f,
 
-			//------ï¿½ï¿½Ê®ï¿½ï¿½ï¿½ï¿½------
+			//------µÚÊ®¸ùÏß------
 			xMin, yMin, zMax,   1.0f, 0.0f, 0.0f,
 			xMin, yMax, zMax,   1.0f, 0.0f, 0.0f,
 
-			//------ï¿½ï¿½Ê®Ò»ï¿½ï¿½ï¿½ï¿½------
+			//------µÚÊ®Ò»¸ùÏß------
 			xMax, yMin, zMax,   1.0f, 0.0f, 0.0f,
 			xMax, yMax, zMax,   1.0f, 0.0f, 0.0f,
 
-			//------ï¿½ï¿½Ê®ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½------
+			//------µÚÊ®¶þ¸ùÏß------
 			xMin, yMax, zMax,   1.0f, 0.0f, 0.0f,
 			xMax, yMax, zMax,   1.0f, 0.0f, 0.0f,
 		};
-		unsigned int AABB_VBO;//ï¿½ï¿½ï¿½ã»ºï¿½ï¿½ï¿½ï¿½ï¿½
-		glGenVertexArrays(1, &AABB_VAO);//ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½VAOï¿½ï¿½ï¿½ï¿½
-		glGenBuffers(1, &AABB_VBO);//ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½VBOï¿½ï¿½ï¿½ï¿½
-		glBindVertexArray(AABB_VAO);//ï¿½ï¿½VAO
-									//ï¿½Ñ¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½é¸´ï¿½Æµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¹ï¿½OpengGLÊ¹ï¿½ï¿½
-		glBindBuffer(GL_ARRAY_BUFFER, AABB_VBO);//ï¿½ï¿½ï¿½Â´ï¿½ï¿½ï¿½ï¿½Ä»ï¿½ï¿½ï¿½VBOï¿½ó¶¨µï¿½GL_ARRAY_BUFFERÄ¿ï¿½ï¿½ï¿½ï¿½
-		glBufferData(GL_ARRAY_BUFFER, sizeof(AABB_vertices), AABB_vertices, GL_STATIC_DRAW);//ï¿½ï¿½Ö®Ç°ï¿½ï¿½ï¿½ï¿½Ä¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½verticesï¿½ï¿½ï¿½Æµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú´ï¿½ï¿½ï¿½
-																							//ï¿½ï¿½ï¿½Ó¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-																							//Î»ï¿½ï¿½ï¿½ï¿½ï¿½Ô£ï¿½ÖµÎª0
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		unsigned int AABB_VBO;//¶¥µã»º³å¶ÔÏó
+		glGenVertexArrays(1, &AABB_VAO);//Éú³ÉÒ»¸öVAO¶ÔÏó
+		glGenBuffers(1, &AABB_VBO);//Éú³ÉÒ»¸öVBO¶ÔÏó
+		glBindVertexArray(AABB_VAO);//°ó¶¨VAO
+									//°Ñ¶¥µãÊý×é¸´ÖÆµ½»º³åÖÐ¹©OpengGLÊ¹ÓÃ
+		glBindBuffer(GL_ARRAY_BUFFER, AABB_VBO);//°ÑÐÂ´´½¨µÄ»º³åVBO°ó¶¨µ½GL_ARRAY_BUFFERÄ¿±êÉÏ
+		glBufferData(GL_ARRAY_BUFFER, sizeof(AABB_vertices), AABB_vertices, GL_STATIC_DRAW);//°ÑÖ®Ç°¶¨ÒåµÄ¶¥µãÊý¾Ývertices¸´ÖÆµ½»º³åµÄÄÚ´æÖÐ
+																							//Á´½Ó¶¥µãÊôÐÔ
+																							//Î»ÖÃÊôÐÔ£¬ÖµÎª0
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);//½âÎö¶¥µãÊý¾Ý
 		glEnableVertexAttribArray(0);
-		//ï¿½ï¿½É«ï¿½ï¿½ï¿½Ô£ï¿½ÖµÎª1
-		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		//ÑÕÉ«ÊôÐÔ£¬ÖµÎª1
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));//½âÎö¶¥µãÊý¾Ý
 		glEnableVertexAttribArray(1);
 	}
 
-	//ï¿½Ð¶ï¿½ï¿½ï¿½ï¿½ï¿½AABBï¿½ï¿½ï¿½Ç·ï¿½ï¿½à½»
+	//ÅÐ¶ÏÁ½¸öAABBºÐÊÇ·ñÏà½»
 	bool IsIntersection(const AABB &a) {
-		//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ï¿½à»¥ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(aï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç°ï¿½ï¿½Î§ï¿½ï¿½) || ï¿½ï¿½ï¿½ï¿½Ç°ï¿½ï¿½Î§ï¿½Ð°ï¿½ï¿½ï¿½aï¿½ï¿½
+		//¼´¸÷ÖáÊÇ·ñÏà»¥°üº¬£¬(a°üº¬µ±Ç°°üÎ§ºÐ) || £¨µ±Ç°°üÎ§ºÐ°üº¬a£©
 		/*
-		//ï¿½ï¿½ï¿½aï¿½ï¿½Î§ï¿½ï¿½ï¿½ï¿½Ð¡ï¿½ï¿½xï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½bï¿½ï¿½Î§ï¿½Ðµï¿½ï¿½ï¿½ï¿½xï¿½ï¿½ï¿½ê£¬aï¿½ï¿½Î§ï¿½ï¿½ï¿½ï¿½xï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½bï¿½ï¿½ï¿½Ò±ï¿½
+		//Èç¹ûa°üÎ§ºÐ×îÐ¡µÄx×ø±ê´óÓÚb°üÎ§ºÐµÄ×î´óx×ø±ê£¬a°üÎ§ºÐÔÚx·½ÏòÉÏÔÚbµÄÓÒ±ß
 		if (a.xMin > xMax) {
 		return FALSE;
 		}
-		//ï¿½ï¿½ï¿½aï¿½ï¿½Î§ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½xï¿½ï¿½ï¿½ï¿½Ð¡ï¿½ï¿½bï¿½ï¿½Î§ï¿½Ðµï¿½ï¿½ï¿½Ð¡xï¿½ï¿½ï¿½ê£¬aï¿½ï¿½Î§ï¿½ï¿½ï¿½ï¿½xï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½bï¿½ï¿½ï¿½ï¿½ï¿½
+		//Èç¹ûa°üÎ§ºÐ×î´óµÄx×ø±êÐ¡ÓÚb°üÎ§ºÐµÄ×îÐ¡x×ø±ê£¬a°üÎ§ºÐÔÚx·½ÏòÉÏÔÚbµÄ×ó±ß
 		else if (a.xMax < xMin) {
 		return FALSE;
 		}
-		//ï¿½ï¿½ï¿½aï¿½ï¿½Î§ï¿½ï¿½ï¿½ï¿½Ð¡ï¿½ï¿½Yï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½bï¿½ï¿½Î§ï¿½Ðµï¿½ï¿½ï¿½ï¿½Yï¿½ï¿½ï¿½ê£¬aï¿½ï¿½Î§ï¿½ï¿½ï¿½ï¿½Yï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½bï¿½ï¿½ï¿½Ò±ï¿½
+		//Èç¹ûa°üÎ§ºÐ×îÐ¡µÄY×ø±ê´óÓÚb°üÎ§ºÐµÄ×î´óY×ø±ê£¬a°üÎ§ºÐÔÚY·½ÏòÉÏÔÚbµÄÓÒ±ß
 		else if (a.yMin > yMax)
 		{
 		return FALSE;
 		}
-		//ï¿½ï¿½ï¿½aï¿½ï¿½Î§ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Yï¿½ï¿½ï¿½ï¿½Ð¡ï¿½ï¿½bï¿½ï¿½Î§ï¿½Ðµï¿½ï¿½ï¿½Ð¡ï¿½ï¿½Yï¿½ï¿½ï¿½ï¿½,aï¿½ï¿½Î§ï¿½ï¿½ï¿½ï¿½Yï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½bï¿½ï¿½ï¿½ï¿½ï¿½
+		//Èç¹ûa°üÎ§ºÐ×î´óµÄY×ø±êÐ¡ÓÚb°üÎ§ºÐµÄ×îÐ¡µÄY×ø±ê,a°üÎ§ºÐÔÚY·½ÏòÉÏÔÚbµÄ×ó±ß
 		else if (a.yMax < yMin)
 		{
 		return FALSE;
 		}
-		//ï¿½ï¿½ï¿½aï¿½ï¿½Î§ï¿½ï¿½ï¿½ï¿½Ð¡ï¿½ï¿½Zï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½bï¿½ï¿½Î§ï¿½Ðµï¿½ï¿½ï¿½ï¿½Zï¿½ï¿½ï¿½ê£¬aï¿½ï¿½Î§ï¿½ï¿½ï¿½ï¿½Zï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½bï¿½ï¿½ï¿½Ï·ï¿½
+		//Èç¹ûa°üÎ§ºÐ×îÐ¡µÄZ×ø±ê´óÓÚb°üÎ§ºÐµÄ×î´óZ×ø±ê£¬a°üÎ§ºÐÔÚZ·½ÏòÉÏÔÚbµÄÉÏ·½
 		else if (a.zMin > zMax)
 		{
 		return FALSE;
 		}
-		//ï¿½ï¿½ï¿½aï¿½ï¿½Î§ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Zï¿½ï¿½ï¿½ï¿½Ð¡ï¿½ï¿½bï¿½ï¿½Î§ï¿½Ðµï¿½ï¿½ï¿½Ð¡ï¿½ï¿½Zï¿½ï¿½ï¿½ï¿½,aï¿½ï¿½Î§ï¿½ï¿½ï¿½ï¿½Zï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½bï¿½ï¿½ï¿½Â·ï¿½
+		//Èç¹ûa°üÎ§ºÐ×î´óµÄZ×ø±êÐ¡ÓÚb°üÎ§ºÐµÄ×îÐ¡µÄZ×ø±ê,a°üÎ§ºÐÔÚZ·½ÏòÉÏÔÚbµÄÏÂ·½
 		else if (a.zMax < zMin)
 		{
 		return FALSE;
@@ -297,17 +297,7 @@ public:
 			((zMin >= a.zMin && zMin <= a.zMax) || (a.zMin >= zMin && a.zMin <= zMax));
 	}
 
-	bool IsIntersection(const Sphere& sphere) {
-		float closest_x = max(xMin, sphere.center.x), closest_y = max(yMin, sphere.center.y), closest_z = max(zMin, sphere.center.z)
-		closest_x = min(sphere.center.x, xMax);
-		closest_y = min(sphere.center.y, yMax);
-		closest_z = min(sphere.center.z, zMax);
-
-		return ((pow(sphere.center.x - closest_x,2) + pow(sphere.center.y - closest_y,2) + pow(sphere.center.z - closest_z,2))
-			<= sphere.radius * sphere.radius);
-	}
-
-	//ÊµÊ±ï¿½ï¿½ï¿½ï¿½AABBï¿½ï¿½×²ï¿½ÐµÄ¶ï¿½ï¿½ï¿½
+	//ÊµÊ±¸üÐÂAABBÅö×²ºÐµÄ¶¥µã
 	void upDateAABBvertices(const glm::mat4& transform) {
 		//cout << zMin << " " << zMax << endl;;
 		//cout << "--------" << endl;
@@ -319,7 +309,7 @@ public:
 		cout << endl;
 		}
 		*/
-		//ï¿½ï¿½ï¿½ï¿½8ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½xMin,yMin,zMin,xMax,yMax,zMax;
+		//¸üÐÂ8¸ö¶¥µãºÍxMin,yMin,zMin,xMax,yMax,zMax;
 		for (int i = 0; i < 8; i++) {
 			glm::vec4 temp = glm::vec4(aabb_vertices[i].x, aabb_vertices[i].y, aabb_vertices[i].z, 1.0f);
 			glm::vec4 result = transform * temp;
@@ -344,7 +334,7 @@ public:
 		cout << test[i] << ' ';
 		cout << endl;
 		*/
-		//ï¿½ï¿½ï¿½ï¿½xMin,yMin,zMin,xMax,yMax,zMax
+		//¸üÐÂxMin,yMin,zMin,xMax,yMax,zMax
 		xMin = 999999.0f;
 		xMax = -999999.0f;
 		yMin = 999999.0f;
@@ -361,9 +351,9 @@ public:
 		}
 	}
 
-	//ï¿½ï¿½ï¿½ï¿½AABBï¿½ï¿½×²ï¿½ï¿½
+	//»æÖÆAABBÅö×²ºÐ
 	void drawAABB(Shader shader, const glm::mat4& transform, const glm::mat4& view, const glm::mat4& projection, bool& ShowAABB) {
-		//ï¿½ï¿½ï¿½ï¿½AABBï¿½ï¿½×²ï¿½ÐµÄ¶ï¿½ï¿½ï¿½
+		//¸üÐÂAABBÅö×²ºÐµÄ¶¥µã
 		upDateAABBvertices(transform);
 
 		shader.use();
@@ -371,9 +361,9 @@ public:
 		shader.setMat4("view", view);
 		shader.setMat4("transform", transform);
 
-		glBindVertexArray(AABB_VAO);//ï¿½ï¿½VAO
+		glBindVertexArray(AABB_VAO);//°ó¶¨VAO
 		if (ShowAABB) {
-			glDrawArrays(GL_LINES, 0, 24);//ï¿½ï¿½ï¿½ï¿½Í¼Ôª
+			glDrawArrays(GL_LINES, 0, 24);//»æÖÆÍ¼Ôª
 		}
 		glBindVertexArray(0);
 	}
