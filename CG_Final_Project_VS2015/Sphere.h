@@ -5,6 +5,10 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 #include <shader_s.h>
 #include <iostream>
 #include <vector>
@@ -14,6 +18,8 @@
 class Sphere {
 public:
 	/* Sphere Data */
+	glm::vec3 center;
+	float radius;
 	std::vector<float> vertices;
 	unsigned int sphereVAO;
 	unsigned int sphereTexture;
@@ -23,12 +29,15 @@ public:
 
 	}
 
-	Sphere(int divide, float radius, std::string picturePath) {
+	Sphere(int divide, float radius, std::string picturePath) : radius(radius) {
 		createSphere(divide, radius, picturePath);
 	}
 
 	void Draw(Shader shader, const glm::mat4& transform, const glm::mat4& view, const glm::mat4& projection) {
-		
+		glm::vec4 temp = transform * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
+		center.x = temp.x;
+		center.y = temp.y;
+		center.z = temp.z;
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, sphereTexture);
 		/*

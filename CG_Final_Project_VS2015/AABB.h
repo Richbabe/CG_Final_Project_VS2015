@@ -297,6 +297,19 @@ public:
 			((zMin >= a.zMin && zMin <= a.zMax) || (a.zMin >= zMin && a.zMin <= zMax));
 	}
 
+	bool IsIntersection(const Sphere &sphere) {
+		float closest_x = max(xMin, sphere.center.x), closest_y = max(yMin, sphere.center.y), closest_z = max(zMin, sphere.center.z);
+		closest_x = min(closest_x, xMax);
+		closest_y = min(closest_y, yMax);
+		closest_z = min(closest_z, zMax);
+		
+		//cout << "distance: " << (pow(sphere.center.x - closest_x, 2) + pow(sphere.center.y - closest_y, 2) + pow(sphere.center.z - closest_z, 2)) << endl;
+		//cout << "radius: " << (sphere.radius * sphere.radius) << endl;
+
+		return ((pow(sphere.center.x - closest_x, 2) + pow(sphere.center.y - closest_y, 2) + pow(sphere.center.z - closest_z, 2))
+			<= (sphere.radius * sphere.radius));
+	}
+
 	//实时更新AABB碰撞盒的顶点
 	void upDateAABBvertices(const glm::mat4& transform) {
 		//cout << zMin << " " << zMax << endl;;

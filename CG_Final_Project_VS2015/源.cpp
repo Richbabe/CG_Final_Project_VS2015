@@ -392,7 +392,7 @@ int main()
 
 		//¼ì²â·É´¬ÊÇ·ñÓëĞÇÇòÅö×²
 		for (int i = 0; i < 11; i++) {
-			if (shipAABB.IsIntersection(spheresAABB[i])) {
+			if (shipAABB.IsIntersection(spheres[i])) {
 				RenderText("GameOver!", 525.0f, 525.0f, 3.0f, glm::vec3(1.0f, 0.0f, 0.0f), SCR_WIDTH, SCR_HEIGHT);
 				//cout << "crash ball " << i << " game over!!!" << endl;
 			}
