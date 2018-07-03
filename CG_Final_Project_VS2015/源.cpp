@@ -148,7 +148,7 @@ int main()
 		std::string("resources/textures/space_skybox/front.tga"),
 	};
 	Skybox skybox(faces);
-
+	/*
 	const unsigned int SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024;
 	unsigned int depthMapFBO;
 	glGenFramebuffers(1, &depthMapFBO);
@@ -169,7 +169,7 @@ int main()
 	glDrawBuffer(GL_NONE);
 	glReadBuffer(GL_NONE);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
+	*/
 	// shader configuration
 	// --------------------
 	shader.use();
@@ -205,6 +205,7 @@ int main()
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+		/*
 		float near_plane = 1.0f;
 		float far_plane = 25.0f;
 		glm::mat4 shadowProj = glm::perspective(glm::radians(90.0f), (float)SHADOW_WIDTH / (float)SHADOW_HEIGHT, near_plane, far_plane);
@@ -215,7 +216,7 @@ int main()
 		shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f)));
 		shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
 		shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
-
+		*/
 
 
 		// view/projection transformations
@@ -242,7 +243,6 @@ int main()
 		venus_trans = glm::translate(venus_trans, glm::vec3(2.5, 0.0, 0.0));
 		venus_trans = glm::rotate(venus_trans, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.0f, 1.0f, 1.0f));
 		
-
 		// draw earth
 		static glm::vec4 earth_position(0.0, 0.0, 0.0, 1.0);
 		glm::mat4 earth_trans(1);//±ä»»¾ØÕó
@@ -305,6 +305,7 @@ int main()
 		glm::mat4 model = glm::mat4();
 		model = glm::scale(model, glm::vec3(1.0f));
 
+		/*
 		glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
 		glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
 		glClear(GL_DEPTH_BUFFER_BIT);
@@ -326,7 +327,7 @@ int main()
 		spheres[9].Draw(simpleDepthShader, neptune_trans, view, projection);
 		spheres[10].Draw(simpleDepthShader, pluto_trans, view, projection);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
+		*/
 		glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		normalShader.use();
@@ -336,18 +337,18 @@ int main()
 		normalShader.setVec3("lightPos", lightPos);
 		normalShader.setVec3("viewPos", camera.Position);
 		normalShader.setInt("shadows", shadows); // enable/disable shadows by pressing 'SPACE'
-		normalShader.setFloat("far_plane", far_plane);
-		spheres[0].Draw(sunShader, sun_trans, shipView, projection, depthCubemap);
-		spheres[1].Draw(normalShader, mercury_trans, shipView, projection, depthCubemap);
-		spheres[2].Draw(normalShader, venus_trans, shipView, projection, depthCubemap);
-		spheres[3].Draw(normalShader, earth_trans, shipView, projection, depthCubemap);
-		spheres[4].Draw(normalShader, moon_trans, shipView, projection, depthCubemap);
-		spheres[5].Draw(normalShader, mars_trans, shipView, projection, depthCubemap);
-		spheres[6].Draw(normalShader, jupiter_trans, shipView, projection, depthCubemap);
-		spheres[7].Draw(normalShader, saturn_trans, shipView, projection, depthCubemap);
-		spheres[8].Draw(normalShader, uranus_trans, shipView, projection, depthCubemap);
-		spheres[9].Draw(normalShader, neptune_trans, shipView, projection, depthCubemap);
-		spheres[10].Draw(normalShader, pluto_trans, shipView, projection, depthCubemap);
+		//normalShader.setFloat("far_plane", far_plane);
+		spheres[0].Draw(sunShader, sun_trans, shipView, projection);
+		spheres[1].Draw(normalShader, mercury_trans, shipView, projection);
+		spheres[2].Draw(normalShader, venus_trans, shipView, projection);
+		spheres[3].Draw(normalShader, earth_trans, shipView, projection);
+		spheres[4].Draw(normalShader, moon_trans, shipView, projection);
+		spheres[5].Draw(normalShader, mars_trans, shipView, projection);
+		spheres[6].Draw(normalShader, jupiter_trans, shipView, projection);
+		spheres[7].Draw(normalShader, saturn_trans, shipView, projection);
+		spheres[8].Draw(normalShader, uranus_trans, shipView, projection);
+		spheres[9].Draw(normalShader, neptune_trans, shipView, projection);
+		spheres[10].Draw(normalShader, pluto_trans, shipView, projection);
 		
 		spheresAABB[0].drawAABB(AABBShader, sun_trans, shipView, projection, ShowAABB);//»æÖÆÌ«ÑôAABBÅö×²ºÐ
 		spheresAABB[1].drawAABB(AABBShader, mercury_trans, shipView, projection, ShowAABB);

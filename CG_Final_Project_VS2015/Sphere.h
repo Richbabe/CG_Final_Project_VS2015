@@ -27,14 +27,16 @@ public:
 		createSphere(divide, radius, picturePath);
 	}
 
-	void Draw(Shader shader, const glm::mat4& transform, const glm::mat4& view, const glm::mat4& projection, unsigned int depthCubemap = 0) {
+	void Draw(Shader shader, const glm::mat4& transform, const glm::mat4& view, const glm::mat4& projection) {
 		
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, sphereTexture);
+		/*
 		if (depthCubemap != 0) {
 			glActiveTexture(GL_TEXTURE1);
 			glBindTexture(GL_TEXTURE_CUBE_MAP, depthCubemap);
 		}
+		*/
 		shader.use();
 		shader.setMat4("projection", projection);
 		shader.setMat4("view", view);
