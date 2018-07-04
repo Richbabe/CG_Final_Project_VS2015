@@ -154,6 +154,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <None Include="asteroids.fs" />
+    <None Include="asteroids.vs" />
     <None Include="cubemap.fs" />
     <None Include="cubemap.vs" />
     <None Include="depth.fs" />
