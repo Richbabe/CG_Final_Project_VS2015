@@ -81,9 +81,9 @@ private:
 				vertices.push_back(j / (float)divide);
 				vertices.push_back(i / (float)divide);
 				//计算azimuth经度下纬度为altitude的点对应法向量
-				vertices.push_back(radius * ex - vertices[0]);
-				vertices.push_back(radius * ey - vertices[1]);
-				vertices.push_back(radius * ez - vertices[2]);
+				vertices.push_back(radius * ex - 0.0f);
+				vertices.push_back(radius * ey - 0.0f);
+				vertices.push_back(radius * ez - 0.0f);
 
 				ex = (float)(cos(altitudeDelta) * cos(azimuth));
 				ey = (float)sin(altitudeDelta);
@@ -96,9 +96,9 @@ private:
 				vertices.push_back(j / (float)divide);
 				vertices.push_back((i + 1) / (float)divide);
 				//计算azimuth经度下纬度为altitudeDelta的点对应法向量
-				vertices.push_back(radius * ex - vertices[0]);
-				vertices.push_back(radius * ey - vertices[1]);
-				vertices.push_back(radius * ez - vertices[2]);
+				vertices.push_back(radius * ex - 0.0f);
+				vertices.push_back(radius * ey - 0.0f);
+				vertices.push_back(radius * ez - 0.0f);
 			}
 		}
 		//球体

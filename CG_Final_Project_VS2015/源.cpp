@@ -212,7 +212,7 @@ int main()
 		std::string("resources/textures/space_skybox/front.tga"),
 	};
 	Skybox skybox(faces);
-	/*
+	
 	const unsigned int SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024;
 	unsigned int depthMapFBO;
 	glGenFramebuffers(1, &depthMapFBO);
@@ -233,7 +233,7 @@ int main()
 	glDrawBuffer(GL_NONE);
 	glReadBuffer(GL_NONE);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	*/
+	
 	// shader configuration
 	// --------------------
 	shader.use();
@@ -249,6 +249,8 @@ int main()
 	int count = 0;
 
 	glm::vec3 lightPos(0.0f, 0.0f, 0.0f);
+
+	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 	// render loop
 	// -----------
 	while (!glfwWindowShouldClose(window))
@@ -266,12 +268,11 @@ int main()
 
 		// render
 		// ------
-		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		/*
+		
 		float near_plane = 1.0f;
-		float far_plane = 25.0f;
+		float far_plane = 1000.0f;
 		glm::mat4 shadowProj = glm::perspective(glm::radians(90.0f), (float)SHADOW_WIDTH / (float)SHADOW_HEIGHT, near_plane, far_plane);
 		std::vector<glm::mat4> shadowTransforms;
 		shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
@@ -280,7 +281,7 @@ int main()
 		shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f)));
 		shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
 		shadowTransforms.push_back(shadowProj * glm::lookAt(lightPos, lightPos + glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
-		*/
+		
 
 
 		// view/projection transformations
@@ -364,15 +365,11 @@ int main()
 		pluto_trans = glm::translate(pluto_trans, glm::vec3(12, 0.0, 0.0));
 		pluto_trans = glm::rotate(pluto_trans, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.0f, 1.0f, 1.0f));
 
-		glm::mat4 model = glm::mat4();
-		model = glm::scale(model, glm::vec3(1.0f));
-
-		/*
+		//绘制深度贴图
 		glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
 		glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
 		glClear(GL_DEPTH_BUFFER_BIT);
 		simpleDepthShader.use();
-		simpleDepthShader.setMat4("model", model);
 		for (unsigned int i = 0; i < 6; ++i)
 			simpleDepthShader.setMat4("shadowMatrices[" + std::to_string(i) + "]", shadowTransforms[i]);
 		simpleDepthShader.setFloat("far_plane", far_plane);
@@ -388,18 +385,37 @@ int main()
 		spheres[8].Draw(simpleDepthShader, uranus_trans, view, projection);
 		spheres[9].Draw(simpleDepthShader, neptune_trans, view, projection);
 		spheres[10].Draw(simpleDepthShader, pluto_trans, view, projection);
+
+		simpleDepthShader.use();
+		simpleDepthShader.setMat4("projection", projection);
+		simpleDepthShader.setMat4("view", shipView);
+		glm::mat4 transform(1);
+		transform = glm::scale(transform, glm::vec3(0.0001f, 0.0001f, 0.0001f));    // it's a bit too big for our scene, so scale it down
+																			//model = glm::translate(model, glm::vec3(0.0f, 0.0f, -20.0f));
+																			//cout << camera.Position.x << " " << camera.Position.y << " " << camera.Position.z  << " " << endl;
+																			//model = glm::translate(model, glm::vec3(0.0f, 0.0f, 10.0f)); // translate it down so it's at the center of the scene
+		transform = glm::translate(transform, ship.Position / 0.0001f); // translate it down so it's at the center of the scene
+		transform = glm::rotate(transform, -camera.Yaw - 90, glm::vec3(0.0, 1.0, 0.0));
+		transform = glm::rotate(transform, camera.Pitch, glm::vec3(1.0, 0.0, 0.0));
+		camera.SetPosition(glm::vec3(ship.Position.x, ship.Position.y, ship.Position.z));
+		//cout << camera.Yaw << endl;
+		simpleDepthShader.setMat4("transform", transform);
+		shipModel.Draw(simpleDepthShader);
+
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		*/
+
+		//渲染场景以及阴影
 		glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		normalShader.use();
-		normalShader.setMat4("model", model);
 		normalShader.setInt("reverse_normals", false);
 		// set lighting uniforms
 		normalShader.setVec3("lightPos", lightPos);
 		normalShader.setVec3("viewPos", camera.Position);
 		normalShader.setInt("shadows", shadows); // enable/disable shadows by pressing 'SPACE'
-		//normalShader.setFloat("far_plane", far_plane);
+		normalShader.setFloat("far_plane", far_plane);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, depthCubemap);
 		spheres[0].Draw(sunShader, sun_trans, shipView, projection);
 		spheres[1].Draw(normalShader, mercury_trans, shipView, projection);
 		spheres[2].Draw(normalShader, venus_trans, shipView, projection);
@@ -423,12 +439,11 @@ int main()
 		spheresAABB[8].drawAABB(AABBShader, uranus_trans, shipView, projection, ShowAABB);
 		spheresAABB[9].drawAABB(AABBShader, neptune_trans, shipView, projection, ShowAABB);
 		spheresAABB[10].drawAABB(AABBShader, pluto_trans, shipView, projection, ShowAABB);
-
-		// draw scene as normal
 		
 		modelShader.use();
 		modelShader.setMat4("projection", projection);
 		modelShader.setMat4("view", shipView);
+		glm::mat4 model(1);
 		model = glm::scale(model, glm::vec3(0.0001f, 0.0001f, 0.0001f));    // it's a bit too big for our scene, so scale it down
 		//model = glm::translate(model, glm::vec3(0.0f, 0.0f, -20.0f));
 		//cout << camera.Position.x << " " << camera.Position.y << " " << camera.Position.z  << " " << endl;
