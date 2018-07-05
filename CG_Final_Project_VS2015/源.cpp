@@ -427,7 +427,7 @@ int main()
 		spheres[8].Draw(normalShader, uranus_trans, shipView, projection);
 		spheres[9].Draw(normalShader, neptune_trans, shipView, projection);
 		spheres[10].Draw(normalShader, pluto_trans, shipView, projection);
-		
+		/*
 		spheresAABB[0].drawAABB(AABBShader, sun_trans, shipView, projection, ShowAABB);//»æÖÆÌ«ÑôAABBÅö×²ºÐ
 		spheresAABB[1].drawAABB(AABBShader, mercury_trans, shipView, projection, ShowAABB);
 		spheresAABB[2].drawAABB(AABBShader, venus_trans, shipView, projection, ShowAABB);
@@ -439,7 +439,7 @@ int main()
 		spheresAABB[8].drawAABB(AABBShader, uranus_trans, shipView, projection, ShowAABB);
 		spheresAABB[9].drawAABB(AABBShader, neptune_trans, shipView, projection, ShowAABB);
 		spheresAABB[10].drawAABB(AABBShader, pluto_trans, shipView, projection, ShowAABB);
-		
+		*/
 		modelShader.use();
 		modelShader.setMat4("projection", projection);
 		modelShader.setMat4("view", shipView);
@@ -518,7 +518,7 @@ void processInput(GLFWwindow *window)
 		glfwSetWindowShouldClose(window, true);
 
 	if (gameOver == false) {
-		cout << "last: " << ship.Position.x << " " << ship.Position.y << " " << ship.Position.z << " ";
+		//cout << "last: " << ship.Position.x << " " << ship.Position.y << " " << ship.Position.z << " ";
 		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 			ship.ProcessKeyboard(FORWARD, deltaTime, camera.Front);
 		if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
@@ -527,7 +527,7 @@ void processInput(GLFWwindow *window)
 			ship.ProcessKeyboard(LEFT, deltaTime, camera.Front);
 		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 			ship.ProcessKeyboard(RIGHT, deltaTime, camera.Front);
-		cout << "next: " << ship.Position.x << " " << ship.Position.y << " " << ship.Position.z << endl;
+		//cout << "next: " << ship.Position.x << " " << ship.Position.y << " " << ship.Position.z << endl;
 	}
 
 	//°´ÏÂMÏÔÊ¾/Òþ²ØÅö×²ºÐ
